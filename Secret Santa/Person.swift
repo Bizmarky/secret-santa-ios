@@ -12,7 +12,7 @@ class Person: Any {
     
     var name: String = ""
     var wishlist = [String]()
-    var secretPerson: Person!
+    var secretPerson: Person?
     var id = UUID()
     
     init(name: String) {
@@ -43,7 +43,7 @@ class Person: Any {
         self.secretPerson = person
     }
     
-    func getSecretPerson() -> Person {
+    func getSecretPerson() -> Person? {
         return self.secretPerson
     }
     

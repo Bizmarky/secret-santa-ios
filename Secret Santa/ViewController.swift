@@ -19,11 +19,16 @@ class ViewController: UIViewController {
     // list of people in the group
     var group = [Person]()
     
-    let p1 = Person(name:"Au")
-    let p2 = Person(name:"Ma")
-    let p3 = Person(name:"Gu")
-    let p4 = Person(name:"Su")
-    let p5 = Person(name:"Ta")
+    let p1 = Person(name:"Marcus")
+    let p2 = Person(name:"Augustine")
+    let p3 = Person(name:"Bobby")
+    let p4 = Person(name:"Joe")
+    let p5 = Person(name:"Maison")
+    let p6 = Person(name:"Sophia")
+    let p7 = Person(name:"Karen")
+    let p8 = Person(name:"Pam")
+    let p9 = Person(name:"Michael")
+    let p10 = Person(name:"Zack")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +38,11 @@ class ViewController: UIViewController {
         group.append(p3)
         group.append(p4)
         group.append(p5)
+        group.append(p6)
+        group.append(p7)
+        group.append(p8)
+        group.append(p9)
+        group.append(p10)
 
         pairPeople()
     }
@@ -54,16 +64,28 @@ class ViewController: UIViewController {
             while (group[num] == group[i]) {
                 num = Int(arc4random_uniform(UInt32(count)))
             }
-                                    
-            group[i].assign(person: group[remaining[num]])
+                        
+            var index = 0
             
-            remaining.remove(at: num)
+            for j in 0..<remaining.count {
+                if num == j {
+                    index = j
+                }
+            }
+            
+            let secret = remaining[index]
+            let secretP = group[secret]
+            group[i].assign(person: secretP)
+            
+            remaining.remove(at: index)
 
         }
-                        
-        for person in group {
-            print(person.getName() + " is assigned to " + person.getSecretPerson().getName())
-        }
+                
+//        Print who is paired with who
+        
+//        for person in group {
+//            print(person.getName() + " is assigned to " + person.getSecretPerson()!.getName())
+//        }
         
     }
 
