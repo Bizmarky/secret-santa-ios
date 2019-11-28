@@ -13,6 +13,7 @@
 		2CFDB7F0238F6B5300F1689E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CFDB7EE238F6B5300F1689E /* Main.storyboard */; };
 		2CFDB7F2238F6B5400F1689E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CFDB7F1238F6B5400F1689E /* Assets.xcassets */; };
 		2CFDB7F5238F6B5400F1689E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CFDB7F3238F6B5400F1689E /* LaunchScreen.storyboard */; };
+		2CFDB7FD238F6CC100F1689E /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDB7FC238F6CC100F1689E /* Person.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		2CFDB7F1238F6B5400F1689E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2CFDB7F4238F6B5400F1689E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2CFDB7F6238F6B5400F1689E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2CFDB7FC238F6CC100F1689E /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				2CFDB7E8238F6B5300F1689E /* AppDelegate.swift */,
 				2CFDB7EA238F6B5300F1689E /* SceneDelegate.swift */,
 				2CFDB7EC238F6B5300F1689E /* ViewController.swift */,
+				2CFDB7FC238F6CC100F1689E /* Person.swift */,
 				2CFDB7EE238F6B5300F1689E /* Main.storyboard */,
 				2CFDB7F1238F6B5400F1689E /* Assets.xcassets */,
 				2CFDB7F3238F6B5400F1689E /* LaunchScreen.storyboard */,
@@ -140,6 +143,7 @@
 			files = (
 				2CFDB7ED238F6B5300F1689E /* ViewController.swift in Sources */,
 				2CFDB7E9238F6B5300F1689E /* AppDelegate.swift in Sources */,
+				2CFDB7FD238F6CC100F1689E /* Person.swift in Sources */,
 				2CFDB7EB238F6B5300F1689E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
