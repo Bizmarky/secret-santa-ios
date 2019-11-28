@@ -8,8 +8,6 @@
 
 import Foundation
 
-var wishlist = [String]()
-
 class Person: Any {
     
     var name: String = ""

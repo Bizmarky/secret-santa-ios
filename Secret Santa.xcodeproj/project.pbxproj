@@ -3,12 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C7874C2239048DA00CCC4AF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7874C1239048DA00CCC4AF /* LoginViewController.swift */; };
+		2C7874C423904A0C00CCC4AF /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7874C323904A0C00CCC4AF /* SetupViewController.swift */; };
 		2CE6A3322390227200F55096 /* WishlistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6A3312390227200F55096 /* WishlistViewController.swift */; };
 		2CE6A33423902C2600F55096 /* WishlistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6A33323902C2600F55096 /* WishlistTableViewCell.swift */; };
+		2CE6A3362390451E00F55096 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6A3352390451E00F55096 /* User.swift */; };
+		2CE6A338239045E700F55096 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2CE6A337239045E700F55096 /* GoogleService-Info.plist */; };
 		2CFDB7E9238F6B5300F1689E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDB7E8238F6B5300F1689E /* AppDelegate.swift */; };
 		2CFDB7EB238F6B5300F1689E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDB7EA238F6B5300F1689E /* SceneDelegate.swift */; };
 		2CFDB7ED238F6B5300F1689E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDB7EC238F6B5300F1689E /* ViewController.swift */; };
@@ -16,11 +20,16 @@
 		2CFDB7F2238F6B5400F1689E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CFDB7F1238F6B5400F1689E /* Assets.xcassets */; };
 		2CFDB7F5238F6B5400F1689E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CFDB7F3238F6B5400F1689E /* LaunchScreen.storyboard */; };
 		2CFDB7FD238F6CC100F1689E /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDB7FC238F6CC100F1689E /* Person.swift */; };
+		AB669B4495E1B09226B1C2EA /* Pods_Secret_Santa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1508E3B07A338E866F8E008 /* Pods_Secret_Santa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C7874C1239048DA00CCC4AF /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		2C7874C323904A0C00CCC4AF /* SetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupViewController.swift; sourceTree = "<group>"; };
 		2CE6A3312390227200F55096 /* WishlistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistViewController.swift; sourceTree = "<group>"; };
 		2CE6A33323902C2600F55096 /* WishlistTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistTableViewCell.swift; sourceTree = "<group>"; };
+		2CE6A3352390451E00F55096 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		2CE6A337239045E700F55096 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2CFDB7E5238F6B5300F1689E /* Secret Santa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Secret Santa.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CFDB7E8238F6B5300F1689E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2CFDB7EA238F6B5300F1689E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -30,6 +39,9 @@
 		2CFDB7F4238F6B5400F1689E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2CFDB7F6238F6B5400F1689E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CFDB7FC238F6CC100F1689E /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		343365043F1DB03BD3E8BEBD /* Pods-Secret Santa.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Secret Santa.release.xcconfig"; path = "Target Support Files/Pods-Secret Santa/Pods-Secret Santa.release.xcconfig"; sourceTree = "<group>"; };
+		E1508E3B07A338E866F8E008 /* Pods_Secret_Santa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Secret_Santa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E70D88946CC674DFB070C850 /* Pods-Secret Santa.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Secret Santa.debug.xcconfig"; path = "Target Support Files/Pods-Secret Santa/Pods-Secret Santa.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB669B4495E1B09226B1C2EA /* Pods_Secret_Santa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,6 +61,8 @@
 			children = (
 				2CFDB7E7238F6B5300F1689E /* Secret Santa */,
 				2CFDB7E6238F6B5300F1689E /* Products */,
+				B607B7556B04FDF93B7377F0 /* Pods */,
+				5E17A75BA4B3FB0260707323 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,12 +83,33 @@
 				2CE6A3312390227200F55096 /* WishlistViewController.swift */,
 				2CE6A33323902C2600F55096 /* WishlistTableViewCell.swift */,
 				2CFDB7FC238F6CC100F1689E /* Person.swift */,
+				2CE6A3352390451E00F55096 /* User.swift */,
+				2C7874C1239048DA00CCC4AF /* LoginViewController.swift */,
+				2C7874C323904A0C00CCC4AF /* SetupViewController.swift */,
 				2CFDB7EE238F6B5300F1689E /* Main.storyboard */,
 				2CFDB7F1238F6B5400F1689E /* Assets.xcassets */,
 				2CFDB7F3238F6B5400F1689E /* LaunchScreen.storyboard */,
 				2CFDB7F6238F6B5400F1689E /* Info.plist */,
+				2CE6A337239045E700F55096 /* GoogleService-Info.plist */,
 			);
 			path = "Secret Santa";
+			sourceTree = "<group>";
+		};
+		5E17A75BA4B3FB0260707323 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E1508E3B07A338E866F8E008 /* Pods_Secret_Santa.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B607B7556B04FDF93B7377F0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E70D88946CC674DFB070C850 /* Pods-Secret Santa.debug.xcconfig */,
+				343365043F1DB03BD3E8BEBD /* Pods-Secret Santa.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,9 +119,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2CFDB7F9238F6B5400F1689E /* Build configuration list for PBXNativeTarget "Secret Santa" */;
 			buildPhases = (
+				AB5A984B3A746A9F71EF6731 /* [CP] Check Pods Manifest.lock */,
 				2CFDB7E1238F6B5300F1689E /* Sources */,
 				2CFDB7E2238F6B5300F1689E /* Frameworks */,
 				2CFDB7E3238F6B5300F1689E /* Resources */,
+				B1E9D14836BC5777CA6C1E89 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -135,12 +173,55 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CFDB7F5238F6B5400F1689E /* LaunchScreen.storyboard in Resources */,
+				2CE6A338239045E700F55096 /* GoogleService-Info.plist in Resources */,
 				2CFDB7F2238F6B5400F1689E /* Assets.xcassets in Resources */,
 				2CFDB7F0238F6B5300F1689E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AB5A984B3A746A9F71EF6731 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Secret Santa-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B1E9D14836BC5777CA6C1E89 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Secret Santa/Pods-Secret Santa-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Secret Santa/Pods-Secret Santa-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Secret Santa/Pods-Secret Santa-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2CFDB7E1238F6B5300F1689E /* Sources */ = {
@@ -151,8 +232,11 @@
 				2CFDB7E9238F6B5300F1689E /* AppDelegate.swift in Sources */,
 				2CE6A33423902C2600F55096 /* WishlistTableViewCell.swift in Sources */,
 				2CE6A3322390227200F55096 /* WishlistViewController.swift in Sources */,
+				2C7874C2239048DA00CCC4AF /* LoginViewController.swift in Sources */,
 				2CFDB7FD238F6CC100F1689E /* Person.swift in Sources */,
 				2CFDB7EB238F6B5300F1689E /* SceneDelegate.swift in Sources */,
+				2C7874C423904A0C00CCC4AF /* SetupViewController.swift in Sources */,
+				2CE6A3362390451E00F55096 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +378,7 @@
 		};
 		2CFDB7FA238F6B5400F1689E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E70D88946CC674DFB070C850 /* Pods-Secret Santa.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -312,6 +397,7 @@
 		};
 		2CFDB7FB238F6B5400F1689E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 343365043F1DB03BD3E8BEBD /* Pods-Secret Santa.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
