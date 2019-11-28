@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 class Person: Any {
     
