@@ -6,5 +6,5 @@ target 'Secret Santa' do
   use_frameworks!
 
   # Pods for Secret Santa
-  pod 'Firebase/Analytics'
+  pod 'Firebase'
 end

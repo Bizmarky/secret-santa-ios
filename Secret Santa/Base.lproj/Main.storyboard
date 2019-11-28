@@ -144,7 +144,7 @@
         <!--Navigation Controller-->
         <scene sceneID="g7g-3c-2Pn">
             <objects>
-                <navigationController id="mBS-kG-snT" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="mainNav" id="mBS-kG-snT" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="iow-kX-7Rn"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="v5i-AP-Gf2">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
