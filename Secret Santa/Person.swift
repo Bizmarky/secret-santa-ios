@@ -12,6 +12,8 @@ class Person: Any {
     
     var name: String = ""
     var wishlist = [String]()
+    var secretPerson: Person!
+    var id = UUID()
     
     init(name: String) {
         self.name = name
@@ -37,4 +39,18 @@ class Person: Any {
         self.wishlist.remove(at: index)
     }
     
+    func assign(person: Person) {
+        self.secretPerson = person
+    }
+    
+    func getSecretPerson() -> Person {
+        return self.secretPerson
+    }
+    
+}
+
+extension Person: Equatable {
+    static func == (lhs: Person, rhs: Person) -> Bool {
+        return lhs.id == rhs.id
+    }
 }
