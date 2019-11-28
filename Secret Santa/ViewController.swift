@@ -9,12 +9,8 @@
 import UIKit
 
 class ViewController: UIViewController {
-
-    @IBOutlet weak var userName: UITextView!
-    @IBOutlet weak var userWishList: UITextView!
-    @IBOutlet weak var submitButtom: UIButton!
     
-//    var user = Person
+    @IBOutlet weak var nameTextField: UITextField!
     
     // list of people in the group
     var group = [Person]()
@@ -29,10 +25,13 @@ class ViewController: UIViewController {
     let p8 = Person(name:"Pam")
     let p9 = Person(name:"Michael")
     let p10 = Person(name:"Zack")
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+                
+        wishlist = ["toys", "games", "candy", "electronics", "car"]
+        
         group.append(p1)
         group.append(p2)
         group.append(p3)

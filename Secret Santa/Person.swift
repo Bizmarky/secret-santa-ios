@@ -8,10 +8,11 @@
 
 import Foundation
 
+var wishlist = [String]()
+
 class Person: Any {
     
     var name: String = ""
-    var wishlist = [String]()
     var secretPerson: Person?
     var id = UUID()
     
@@ -23,20 +24,8 @@ class Person: Any {
         return self.name
     }
     
-    func getWishlist() -> [String] {
-        return self.wishlist
-    }
-    
     func setName(newName: String) {
         self.name = newName
-    }
-    
-    func addToWishlist(item: String) {
-        self.wishlist.append(item)
-    }
-    
-    func removeFromWishlist(index: Int) {
-        self.wishlist.remove(at: index)
     }
     
     func assign(person: Person) {

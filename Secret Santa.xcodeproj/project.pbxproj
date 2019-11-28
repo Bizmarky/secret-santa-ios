@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2CE6A3322390227200F55096 /* WishlistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6A3312390227200F55096 /* WishlistViewController.swift */; };
+		2CE6A33423902C2600F55096 /* WishlistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6A33323902C2600F55096 /* WishlistTableViewCell.swift */; };
 		2CFDB7E9238F6B5300F1689E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDB7E8238F6B5300F1689E /* AppDelegate.swift */; };
 		2CFDB7EB238F6B5300F1689E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDB7EA238F6B5300F1689E /* SceneDelegate.swift */; };
 		2CFDB7ED238F6B5300F1689E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDB7EC238F6B5300F1689E /* ViewController.swift */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2CE6A3312390227200F55096 /* WishlistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistViewController.swift; sourceTree = "<group>"; };
+		2CE6A33323902C2600F55096 /* WishlistTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistTableViewCell.swift; sourceTree = "<group>"; };
 		2CFDB7E5238F6B5300F1689E /* Secret Santa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Secret Santa.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CFDB7E8238F6B5300F1689E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2CFDB7EA238F6B5300F1689E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -61,6 +65,8 @@
 				2CFDB7E8238F6B5300F1689E /* AppDelegate.swift */,
 				2CFDB7EA238F6B5300F1689E /* SceneDelegate.swift */,
 				2CFDB7EC238F6B5300F1689E /* ViewController.swift */,
+				2CE6A3312390227200F55096 /* WishlistViewController.swift */,
+				2CE6A33323902C2600F55096 /* WishlistTableViewCell.swift */,
 				2CFDB7FC238F6CC100F1689E /* Person.swift */,
 				2CFDB7EE238F6B5300F1689E /* Main.storyboard */,
 				2CFDB7F1238F6B5400F1689E /* Assets.xcassets */,
@@ -143,6 +149,8 @@
 			files = (
 				2CFDB7ED238F6B5300F1689E /* ViewController.swift in Sources */,
 				2CFDB7E9238F6B5300F1689E /* AppDelegate.swift in Sources */,
+				2CE6A33423902C2600F55096 /* WishlistTableViewCell.swift in Sources */,
+				2CE6A3322390227200F55096 /* WishlistViewController.swift in Sources */,
 				2CFDB7FD238F6CC100F1689E /* Person.swift in Sources */,
 				2CFDB7EB238F6B5300F1689E /* SceneDelegate.swift in Sources */,
 			);
