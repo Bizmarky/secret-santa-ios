@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var userWishList: UITextView!
     @IBOutlet weak var submitButtom: UIButton!
     
-    var user = Person
+//    var user = Person
     
     override func viewDidLoad() {
         super.viewDidLoad()
