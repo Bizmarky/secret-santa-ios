@@ -22,6 +22,10 @@ class SetupViewController: UIViewController {
     @IBOutlet weak var nameField: UITextField!
     
     @IBOutlet weak var submitButton: UIButton!
+    
+    @IBAction func submitButton(_sender: Any){
+        performSegue(withIdentifier: "SetupToNavigation", sender: self)
+    }
         
     override func viewDidLoad() {
         super.viewDidLoad()
