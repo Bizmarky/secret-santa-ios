@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import Firebase
+import FirebaseFirestore
 
 class SetupViewController: UIViewController {
     
@@ -22,10 +22,6 @@ class SetupViewController: UIViewController {
     @IBOutlet weak var nameField: UITextField!
     
     @IBOutlet weak var submitButton: UIButton!
-    
-    @IBAction func submitButton(_sender: Any){
-        performSegue(withIdentifier: "SetupToNavigation", sender: self)
-    }
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +38,8 @@ class SetupViewController: UIViewController {
         let titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         UISegmentedControl.appearance().setTitleTextAttributes(titleTextAttributes, for: .selected)
         userTypeAction(self)
-        
+                
+        userGroup = []
         
     }
     
@@ -55,17 +52,80 @@ class SetupViewController: UIViewController {
     }
     
     @IBAction func buttonAction(_ sender: Any) {
+        
         if !checkTextFields() {
             self.createAlert(title: "Error", message: "Text fields cannot be blank")
         }
         
         if host {
+            
             // Firebase check room id
             // Firebase create room id
             // Firebase join room with uid as node and name and wishlist as children
+            
+            db.collection(groupIDField.text!).getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    self.createAlert(title: "Error", message: err.localizedDescription)
+                } else {
+                    if querySnapshot!.documents.count == 0 {
+                        ref = db.collection(self.groupIDField.text!).addDocument(data: [
+                            "name":self.nameField.text!,
+                            "wishlist":[String](),
+                            "host":true
+                            ]) { err in
+                                if let err = err {
+                                    self.createAlert(title: "Error", message: err.localizedDescription)
+                                } else {
+                                    uid = ref!.documentID
+                                    print(uid)
+                                    // Segue to next screen
+                                }
+                            }
+                    } else {
+                        self.createAlert(title: "Group already exists", message: "Please choose a new Group ID")
+                    }
+                }
+            }
+            
         } else if join {
+            
             // Firebase check if room exists
-            // Firebase
+            // Firebase download people data
+            
+            db.collection(groupIDField.text!).getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    self.createAlert(title: "Error", message: err.localizedDescription)
+                } else {
+                    if querySnapshot!.documents.count != 0 {
+                        for doc in querySnapshot!.documents {
+                            let data = doc.data()
+                            let personName = data["name"] as! String
+                            let personWishlist = data["wishlist"] as! [String]
+                            
+                            let person = Person(name: personName)
+                            person.setWishList(list: personWishlist)
+                            
+                            userGroup.append(person)
+                        }
+                        ref = db.collection(self.groupIDField.text!).addDocument(data: [
+                            "name":self.nameField.text!,
+                            "wishlist":[String](),
+                            "host":false
+                            ]) { err in
+                                if let err = err {
+                                    self.createAlert(title: "Error", message: err.localizedDescription)
+                                } else {
+                                    uid = ref!.documentID
+                                    print(uid)
+                                    // Segue to next screen
+                                }
+                        }
+                    } else {
+                        self.createAlert(title: "Group does not exist", message: "Please check Group ID")
+                    }
+                }
+            }
+            
         }
     }
     

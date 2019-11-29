@@ -8,5 +8,10 @@
 
 import Foundation
 import UIKit
+import FirebaseFirestore
 
-var wishlist = [String]()
+var wishlist: [String]!
+let db = Firestore.firestore()
+var uid: String!
+var ref: DocumentReference? = nil
+var userGroup: [Person]!

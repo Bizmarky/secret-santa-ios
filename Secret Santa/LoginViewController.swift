@@ -8,17 +8,13 @@
 
 import Foundation
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let controller = segue.destination as? SetupViewController {
-            if segue.identifier == "hostSegue" {
-                controller.host = true
-            } else if segue.identifier == "joinSegue" {
-                controller.join = true
-            }
-        }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
     }
     
 }

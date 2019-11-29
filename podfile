@@ -6,6 +6,7 @@ target 'Secret Santa' do
   use_frameworks!
 
   # Pods for Secret Santa
+  pod 'Firebase/Auth'
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
   pod 'FirebaseFirestoreSwift'
