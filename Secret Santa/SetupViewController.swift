@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-//import Firebase
+import Firebase
 
 class SetupViewController: UIViewController {
     
@@ -42,6 +42,7 @@ class SetupViewController: UIViewController {
         let titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         UISegmentedControl.appearance().setTitleTextAttributes(titleTextAttributes, for: .selected)
         userTypeAction(self)
+        
         
     }
     
