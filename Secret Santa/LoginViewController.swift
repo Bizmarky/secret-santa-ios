@@ -12,8 +12,20 @@ import FirebaseAuth
 
 class LoginViewController: UIViewController {
 
+    @IBOutlet weak var emailTextField: UITextField!
+    
+    @IBOutlet weak var passwordTextEmail: UITextField!
+    
+    @IBOutlet weak var loginButton: UIButton!
+    
+    @IBAction func loginButton(_ sender: Any) {
+        performSegue(withIdentifier: "LoginToNav", sender: self)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        loginButton.layer.cornerRadius = loginButton.frame.height/4
         
     }
     
