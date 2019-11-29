@@ -56,6 +56,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0FF3FB092390A26E00B07B26 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2CFDB7FC238F6CC100F1689E /* Person.swift */,
+				2CE6A3352390451E00F55096 /* User.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		2CFDB7DC238F6B5300F1689E = {
 			isa = PBXGroup;
 			children = (
@@ -77,13 +86,12 @@
 		2CFDB7E7238F6B5300F1689E /* Secret Santa */ = {
 			isa = PBXGroup;
 			children = (
+				0FF3FB092390A26E00B07B26 /* Models */,
 				2CFDB7E8238F6B5300F1689E /* AppDelegate.swift */,
 				2CFDB7EA238F6B5300F1689E /* SceneDelegate.swift */,
 				2CFDB7EC238F6B5300F1689E /* ViewController.swift */,
 				2CE6A3312390227200F55096 /* WishlistViewController.swift */,
 				2CE6A33323902C2600F55096 /* WishlistTableViewCell.swift */,
-				2CFDB7FC238F6CC100F1689E /* Person.swift */,
-				2CE6A3352390451E00F55096 /* User.swift */,
 				2C7874C1239048DA00CCC4AF /* LoginViewController.swift */,
 				2C7874C323904A0C00CCC4AF /* SetupViewController.swift */,
 				2CFDB7EE238F6B5300F1689E /* Main.storyboard */,

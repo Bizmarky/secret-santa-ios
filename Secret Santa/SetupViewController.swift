@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import Firebase
+//import Firebase
 
 class SetupViewController: UIViewController {
     
@@ -22,6 +22,10 @@ class SetupViewController: UIViewController {
     @IBOutlet weak var nameField: UITextField!
     
     @IBOutlet weak var submitButton: UIButton!
+    
+    @IBAction func submitButton(_sender: Any){
+        performSegue(withIdentifier: "SetupToNavigation", sender: self)
+    }
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +38,7 @@ class SetupViewController: UIViewController {
         
         titleText.font = .systemFont(ofSize: 16, weight: .semibold)
         self.navigationItem.titleView = titleText
+        self.navigationItem.setHidesBackButton(true, animated: true)
         let titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         UISegmentedControl.appearance().setTitleTextAttributes(titleTextAttributes, for: .selected)
         userTypeAction(self)
