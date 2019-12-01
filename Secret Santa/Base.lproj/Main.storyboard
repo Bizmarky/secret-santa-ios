@@ -22,7 +22,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VMm-Gi-rAg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1107" y="-1339"/>
+            <point key="canvasLocation" x="1242" y="-1462"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="5LN-cU-UBs">
@@ -81,7 +81,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pqm-P3-5Le" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="464" y="-990"/>
+            <point key="canvasLocation" x="1806" y="-64"/>
         </scene>
         <!--Second Sign Up View Controller-->
         <scene sceneID="ZD0-fA-VR5">
@@ -116,6 +116,10 @@
                                     <action selector="submitAction:" destination="hw4-OW-FES" eventType="touchUpInside" id="OMm-Hd-jdt"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="yNr-Uy-tMe">
+                                <rect key="frame" x="0.0" y="44" width="414" height="692"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.24914722711267606" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
@@ -123,7 +127,11 @@
                             <constraint firstItem="94c-Iq-6cR" firstAttribute="centerY" secondItem="zIG-QV-1el" secondAttribute="centerY" constant="24" id="FoZ-he-D0s"/>
                             <constraint firstItem="S4s-ri-wKe" firstAttribute="trailing" secondItem="tDl-Dq-u88" secondAttribute="trailing" constant="80" id="Fzq-9d-JqD"/>
                             <constraint firstItem="94c-Iq-6cR" firstAttribute="top" secondItem="tDl-Dq-u88" secondAttribute="bottom" constant="72" id="JKG-RF-z3v"/>
+                            <constraint firstItem="S4s-ri-wKe" firstAttribute="bottom" secondItem="yNr-Uy-tMe" secondAttribute="bottom" id="Tq3-3e-gZI"/>
                             <constraint firstItem="94c-Iq-6cR" firstAttribute="centerX" secondItem="zIG-QV-1el" secondAttribute="centerX" id="VHb-WZ-gBT"/>
+                            <constraint firstItem="S4s-ri-wKe" firstAttribute="trailing" secondItem="yNr-Uy-tMe" secondAttribute="trailing" id="Xwr-ca-Dj4"/>
+                            <constraint firstItem="yNr-Uy-tMe" firstAttribute="leading" secondItem="S4s-ri-wKe" secondAttribute="leading" id="aV3-2L-2EV"/>
+                            <constraint firstItem="yNr-Uy-tMe" firstAttribute="top" secondItem="S4s-ri-wKe" secondAttribute="top" id="bgf-Ey-aRG"/>
                             <constraint firstItem="tDl-Dq-u88" firstAttribute="top" secondItem="WC0-aI-kxd" secondAttribute="bottom" constant="24" id="sQ5-aK-rpN"/>
                             <constraint firstItem="WC0-aI-kxd" firstAttribute="leading" secondItem="S4s-ri-wKe" secondAttribute="leading" constant="80" id="tbC-Se-Ix9"/>
                             <constraint firstItem="S4s-ri-wKe" firstAttribute="trailing" secondItem="WC0-aI-kxd" secondAttribute="trailing" constant="80" id="wac-u9-Omw"/>
@@ -132,36 +140,69 @@
                     </view>
                     <navigationItem key="navigationItem" id="FEI-ad-RHK"/>
                     <connections>
+                        <outlet property="activityIndicatorView" destination="yNr-Uy-tMe" id="BbH-SY-kjo"/>
                         <outlet property="emailField" destination="WC0-aI-kxd" id="0eN-bT-8z2"/>
                         <outlet property="passwordField" destination="tDl-Dq-u88" id="37S-VZ-whP"/>
                         <outlet property="submitButton" destination="94c-Iq-6cR" id="Vb2-Ne-7cn"/>
+                        <segue destination="Dsa-vB-fLn" kind="presentation" identifier="setupToMain" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="vq2-FR-Enn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qbR-wl-cMN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1168" y="-990"/>
+            <point key="canvasLocation" x="1806" y="637"/>
         </scene>
-        <!--Initial Navigation Controller-->
+        <!--Navigation Controller-->
         <scene sceneID="nQ3-6j-Fn8">
             <objects>
-                <navigationController id="UAN-61-X8R" customClass="InitialNavigationController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="initNav" id="UAN-61-X8R" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="oJj-oq-QCJ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="dEQ-rU-DHc" kind="presentation" identifier="initToLogin" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="DnT-sz-v7c"/>
-                        <segue destination="Dsa-vB-fLn" kind="presentation" identifier="initToMain" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="GGW-Jj-7Zn"/>
+                        <segue destination="8ud-19-LP4" kind="relationship" relationship="rootViewController" id="c1Y-yz-t6U"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gcA-fx-G5C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1955" y="-904"/>
+            <point key="canvasLocation" x="187" y="-2858"/>
+        </scene>
+        <!--Initial View Controller-->
+        <scene sceneID="gUO-Yz-Vjn">
+            <objects>
+                <viewController title="Initial View Controller" id="8ud-19-LP4" customClass="InitialViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="YAs-fb-YFi">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="PG6-nt-Pab">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.24914722710000001" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="PG6-nt-Pab" firstAttribute="leading" secondItem="YAs-fb-YFi" secondAttribute="leading" id="RTT-8D-Tuf"/>
+                            <constraint firstAttribute="trailing" secondItem="PG6-nt-Pab" secondAttribute="trailing" id="bKr-GH-PqM"/>
+                            <constraint firstAttribute="bottom" secondItem="PG6-nt-Pab" secondAttribute="bottom" id="iif-8a-0pv"/>
+                            <constraint firstItem="PG6-nt-Pab" firstAttribute="top" secondItem="YAs-fb-YFi" secondAttribute="top" id="vvd-nJ-n0Y"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="dvE-7U-eHJ"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="S8r-FC-MAX"/>
+                    <connections>
+                        <segue destination="dEQ-rU-DHc" kind="presentation" identifier="initToLogin" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="Bn8-PC-DRv"/>
+                        <segue destination="Dsa-vB-fLn" kind="presentation" identifier="initToMain" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="GEO-PN-qvl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7rP-Jm-ckh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="187" y="-2221"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="WuG-fK-3KU">
             <objects>
-                <navigationController storyboardIdentifier="SetupNavController" id="Dsa-vB-fLn" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="setupNav" id="Dsa-vB-fLn" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="jLS-Vo-xNU"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="uf6-CW-r7p">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -173,7 +214,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EDd-EQ-6Zi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1107" y="-592"/>
+            <point key="canvasLocation" x="-794" y="-1461"/>
         </scene>
         <!--Setup View Controller-->
         <scene sceneID="OrM-yA-bvg">
@@ -218,47 +259,71 @@
                                     <action selector="userTypeAction:" destination="8Vp-RC-4sT" eventType="valueChanged" id="gpO-ev-Tvx"/>
                                 </connections>
                             </segmentedControl>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="sqq-hN-bjQ">
+                                <rect key="frame" x="0.0" y="44" width="414" height="692"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.24914722710000001" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="b0U-eG-2oW" firstAttribute="top" secondItem="vTA-z7-pus" secondAttribute="top" constant="48" id="1SV-Cu-R5J"/>
+                            <constraint firstItem="sqq-hN-bjQ" firstAttribute="top" secondItem="vTA-z7-pus" secondAttribute="top" id="1bh-Oo-LHG"/>
                             <constraint firstItem="gbz-WQ-ijE" firstAttribute="top" secondItem="LBx-qV-U0B" secondAttribute="bottom" constant="24" id="3zL-Nq-Yce"/>
+                            <constraint firstItem="sqq-hN-bjQ" firstAttribute="leading" secondItem="UTU-oI-YZ1" secondAttribute="leading" id="73Q-ki-XeQ"/>
                             <constraint firstItem="b0U-eG-2oW" firstAttribute="leading" secondItem="vTA-z7-pus" secondAttribute="leading" constant="111" id="8XZ-h7-JyT"/>
                             <constraint firstItem="vTA-z7-pus" firstAttribute="trailing" secondItem="gbz-WQ-ijE" secondAttribute="trailing" constant="80" id="F3D-XV-bQE"/>
                             <constraint firstItem="dZg-9d-6wJ" firstAttribute="leading" secondItem="vTA-z7-pus" secondAttribute="leading" constant="129" id="G7l-fx-aFB"/>
                             <constraint firstItem="LBx-qV-U0B" firstAttribute="leading" secondItem="vTA-z7-pus" secondAttribute="leading" constant="80" id="Lvw-sP-x42"/>
                             <constraint firstItem="dZg-9d-6wJ" firstAttribute="top" secondItem="gbz-WQ-ijE" secondAttribute="bottom" constant="72" id="V8R-DZ-9Po"/>
                             <constraint firstItem="gbz-WQ-ijE" firstAttribute="leading" secondItem="vTA-z7-pus" secondAttribute="leading" constant="80" id="b9a-6Q-lpA"/>
+                            <constraint firstAttribute="bottom" secondItem="sqq-hN-bjQ" secondAttribute="bottom" id="btA-WX-Q1i"/>
                             <constraint firstItem="vTA-z7-pus" firstAttribute="trailing" secondItem="dZg-9d-6wJ" secondAttribute="trailing" constant="129" id="fZX-Ez-pWG"/>
+                            <constraint firstItem="vTA-z7-pus" firstAttribute="trailing" secondItem="sqq-hN-bjQ" secondAttribute="trailing" id="hrU-4y-u1l"/>
                             <constraint firstItem="dZg-9d-6wJ" firstAttribute="centerY" secondItem="UTU-oI-YZ1" secondAttribute="centerY" constant="24" id="nzI-mw-Ibp"/>
                             <constraint firstItem="vTA-z7-pus" firstAttribute="trailing" secondItem="b0U-eG-2oW" secondAttribute="trailing" constant="111" id="vJl-iP-p4e"/>
                             <constraint firstItem="vTA-z7-pus" firstAttribute="trailing" secondItem="LBx-qV-U0B" secondAttribute="trailing" constant="80" id="xWo-8z-FVt"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="vTA-z7-pus"/>
                     </view>
-                    <navigationItem key="navigationItem" id="wSk-ay-H8r"/>
+                    <navigationItem key="navigationItem" id="wSk-ay-H8r">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="qDg-Jx-GiF">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="AXN-8B-0d4">
+                                <rect key="frame" x="302" y="5.6666666666666679" width="92" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                <state key="normal" title="Logout">
+                                    <color key="titleColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="logoutAction:" destination="8Vp-RC-4sT" eventType="touchUpInside" id="SRu-fT-SA6"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="activityIndicatorView" destination="sqq-hN-bjQ" id="Hv9-Zm-gCW"/>
                         <outlet property="groupIDField" destination="LBx-qV-U0B" id="Cbe-uK-dte"/>
                         <outlet property="nameField" destination="gbz-WQ-ijE" id="zUz-U2-9zN"/>
                         <outlet property="submitButton" destination="dZg-9d-6wJ" id="r0H-zm-cf3"/>
                         <outlet property="userTypeControl" destination="b0U-eG-2oW" id="hh6-wz-QYa"/>
-                        <segue destination="mBS-kG-snT" kind="presentation" identifier="SetupToNavigation" id="UCW-Pb-DMM"/>
+                        <segue destination="mBS-kG-snT" kind="presentation" identifier="mainToHome" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="Zsg-NC-4nj"/>
+                        <segue destination="dEQ-rU-DHc" kind="presentation" identifier="logoutSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="U81-SO-RvW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hXW-CY-rRZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-297" y="-604"/>
+            <point key="canvasLocation" x="-794" y="-818"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController title="Main View Controller" id="BYZ-38-t0r" customClass="ViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="aWB-nh-4j1">
-                                <rect key="frame" x="78" y="221" width="259" height="34"/>
+                                <rect key="frame" x="78" y="209" width="259" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
@@ -275,7 +340,7 @@
                     <navigationItem key="navigationItem" id="ObY-GR-kc9">
                         <barButtonItem key="rightBarButtonItem" id="sSh-ho-UGR">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ft4-kZ-3OG">
-                                <rect key="frame" x="302" y="11.666666666666664" width="92" height="33"/>
+                                <rect key="frame" x="302" y="5.6666666666666679" width="92" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                 <state key="normal" title="Wishlist"/>
@@ -292,7 +357,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-296" y="120"/>
+            <point key="canvasLocation" x="-794" y="637"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="g7g-3c-2Pn">
@@ -300,7 +365,7 @@
                 <navigationController storyboardIdentifier="mainNav" id="mBS-kG-snT" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="iow-kX-7Rn"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="v5i-AP-Gf2">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -309,14 +374,14 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nz7-iw-iHl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1107" y="120"/>
+            <point key="canvasLocation" x="-794" y="-64"/>
         </scene>
         <!--Wishlist View Controller-->
         <scene sceneID="207-n4-oSq">
             <objects>
                 <tableViewController title="Wishlist View Controller" id="yXl-qr-OVs" customClass="WishlistViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="dJa-FM-R6M">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
@@ -338,7 +403,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ieH-jr-yqx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="464" y="120"/>
+            <point key="canvasLocation" x="-794" y="1515"/>
         </scene>
         <!--Title View Controller-->
         <scene sceneID="eTV-bd-o3w">
@@ -400,7 +465,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vfh-ev-pw1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-297.10144927536237" y="-1339.4021739130435"/>
+            <point key="canvasLocation" x="1241" y="-818"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="d4D-cW-U0I">
@@ -435,9 +500,16 @@
                                     <action selector="loginAction:" destination="7eX-26-67L" eventType="touchUpInside" id="ZeS-hg-WrH"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="ApD-sd-zUc">
+                                <rect key="frame" x="0.0" y="44" width="414" height="692"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.24914722710000001" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="ApD-sd-zUc" firstAttribute="leading" secondItem="GDe-1S-d1Q" secondAttribute="leading" id="7dD-DO-uPb"/>
+                            <constraint firstItem="ApD-sd-zUc" firstAttribute="trailing" secondItem="GDe-1S-d1Q" secondAttribute="trailing" id="96S-Fc-86M"/>
+                            <constraint firstAttribute="bottom" secondItem="ApD-sd-zUc" secondAttribute="bottom" id="B7D-Ec-8gh"/>
                             <constraint firstItem="GDe-1S-d1Q" firstAttribute="trailing" secondItem="dMO-33-dId" secondAttribute="trailing" constant="80" id="Kwd-ho-ZAy"/>
                             <constraint firstItem="MBU-p9-Ewg" firstAttribute="leading" secondItem="GDe-1S-d1Q" secondAttribute="leading" constant="80" id="L8X-hu-lN7"/>
                             <constraint firstItem="GDe-1S-d1Q" firstAttribute="trailing" secondItem="MBU-p9-Ewg" secondAttribute="trailing" constant="80" id="ORn-bO-l5a"/>
@@ -445,20 +517,27 @@
                             <constraint firstItem="tWX-Xa-hVM" firstAttribute="centerY" secondItem="udq-Av-n6R" secondAttribute="centerY" constant="24" id="RKl-jX-zBC"/>
                             <constraint firstItem="MBU-p9-Ewg" firstAttribute="top" secondItem="dMO-33-dId" secondAttribute="bottom" constant="24" id="Wge-xn-fb2"/>
                             <constraint firstItem="dMO-33-dId" firstAttribute="leading" secondItem="GDe-1S-d1Q" secondAttribute="leading" constant="80" id="pyo-d5-kjv"/>
+                            <constraint firstItem="ApD-sd-zUc" firstAttribute="top" secondItem="GDe-1S-d1Q" secondAttribute="top" id="xAR-Ms-D9Z"/>
                             <constraint firstItem="tWX-Xa-hVM" firstAttribute="top" secondItem="MBU-p9-Ewg" secondAttribute="bottom" constant="72" id="zH5-zM-B9V"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="GDe-1S-d1Q"/>
                     </view>
                     <navigationItem key="navigationItem" id="f33-Lo-N8Z"/>
                     <connections>
+                        <outlet property="activityIndicatorView" destination="ApD-sd-zUc" id="eVD-Rj-e5M"/>
                         <outlet property="emailTextField" destination="dMO-33-dId" id="k9P-6U-eT2"/>
                         <outlet property="loginButton" destination="tWX-Xa-hVM" id="NgG-CZ-tAm"/>
                         <outlet property="passwordTextField" destination="MBU-p9-Ewg" id="uUj-KD-AbW"/>
+                        <segue destination="Dsa-vB-fLn" kind="presentation" identifier="loginToMain" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="Jqo-0i-naz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Uv-gO-TAa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="464" y="-1633"/>
+            <point key="canvasLocation" x="696" y="-64"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="GEO-PN-qvl"/>
+        <segue reference="Bn8-PC-DRv"/>
+    </inferredMetricsTieBreakers>
 </document>

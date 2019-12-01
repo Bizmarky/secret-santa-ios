@@ -12,7 +12,7 @@
 		2C2A4A45239333C60007DA99 /* SecondSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A4A44239333C60007DA99 /* SecondSignUpViewController.swift */; };
 		2C7874C2239048DA00CCC4AF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7874C1239048DA00CCC4AF /* LoginViewController.swift */; };
 		2C7874C423904A0C00CCC4AF /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7874C323904A0C00CCC4AF /* SetupViewController.swift */; };
-		2CD47C7723939CF3003BD5FA /* InitialNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD47C7623939CF3003BD5FA /* InitialNavigationController.swift */; };
+		2CD47C7723939CF3003BD5FA /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD47C7623939CF3003BD5FA /* InitialViewController.swift */; };
 		2CE6A3322390227200F55096 /* WishlistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6A3312390227200F55096 /* WishlistViewController.swift */; };
 		2CE6A33423902C2600F55096 /* WishlistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6A33323902C2600F55096 /* WishlistTableViewCell.swift */; };
 		2CE6A3362390451E00F55096 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6A3352390451E00F55096 /* User.swift */; };
@@ -33,7 +33,7 @@
 		2C2A4A44239333C60007DA99 /* SecondSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondSignUpViewController.swift; sourceTree = "<group>"; };
 		2C7874C1239048DA00CCC4AF /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		2C7874C323904A0C00CCC4AF /* SetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupViewController.swift; sourceTree = "<group>"; };
-		2CD47C7623939CF3003BD5FA /* InitialNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialNavigationController.swift; sourceTree = "<group>"; };
+		2CD47C7623939CF3003BD5FA /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		2CE6A3312390227200F55096 /* WishlistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistViewController.swift; sourceTree = "<group>"; };
 		2CE6A33323902C2600F55096 /* WishlistTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistTableViewCell.swift; sourceTree = "<group>"; };
 		2CE6A3352390451E00F55096 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -105,7 +105,7 @@
 				2C2A4A44239333C60007DA99 /* SecondSignUpViewController.swift */,
 				2C2A4A4023932DCD0007DA99 /* TitleViewController.swift */,
 				2C7874C323904A0C00CCC4AF /* SetupViewController.swift */,
-				2CD47C7623939CF3003BD5FA /* InitialNavigationController.swift */,
+				2CD47C7623939CF3003BD5FA /* InitialViewController.swift */,
 				2CFDB7EE238F6B5300F1689E /* Main.storyboard */,
 				2CFDB7F1238F6B5400F1689E /* Assets.xcassets */,
 				2CFDB7F3238F6B5400F1689E /* LaunchScreen.storyboard */,
@@ -252,7 +252,7 @@
 				2C2A4A43239332510007DA99 /* SignUpViewController.swift in Sources */,
 				2CFDB7ED238F6B5300F1689E /* ViewController.swift in Sources */,
 				2CFDB7E9238F6B5300F1689E /* AppDelegate.swift in Sources */,
-				2CD47C7723939CF3003BD5FA /* InitialNavigationController.swift in Sources */,
+				2CD47C7723939CF3003BD5FA /* InitialViewController.swift in Sources */,
 				2CE6A33423902C2600F55096 /* WishlistTableViewCell.swift in Sources */,
 				2CE6A3322390227200F55096 /* WishlistViewController.swift in Sources */,
 				2C7874C2239048DA00CCC4AF /* LoginViewController.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  InitialNavigationController.swift
+//  InitialViewController.swift
 //  Secret Santa
 //
 //  Created by Marcus McCallum on 12/1/19.
@@ -9,16 +9,25 @@
 import Foundation
 import FirebaseAuth
 
-class InitialNavigationController: UINavigationController {
+class InitialViewController: UIViewController {
+    
+    var timeOut: Timer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        rootNav = self
+
+        timeOut = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(timeOutFunc), userInfo: nil, repeats: false)
+        
+    }
+    
+    @objc func timeOutFunc() {
+        print("Timeout")
+        self.performSegue(withIdentifier: "initToLogin", sender: self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         Auth.auth().currentUser?.reload(completion: { (err) in
             if let err = err {
                 print(err)
@@ -29,14 +38,6 @@ class InitialNavigationController: UINavigationController {
             }
         })
         
-//        if Auth.auth().currentUser != nil {
-//            user = Auth.auth().currentUser
-//            // segue to main
-//            performSegue(withIdentifier: "initToMain", sender: self)
-//        } else {
-//            // segue to login
-//            performSegue(withIdentifier: "initToLogin", sender: self)
-//        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

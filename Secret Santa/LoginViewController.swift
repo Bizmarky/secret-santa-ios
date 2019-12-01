@@ -18,6 +18,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var loginButton: UIButton!
         
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,26 +37,31 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         emailTextField.becomeFirstResponder()
         
+        activityIndicatorView.isHidden = true
+        
     }
     
     @IBAction func loginAction(_ sender: Any) {
-        
+        resignFirstResponder()
+        activityIndicatorView.isHidden = false
         if checkTextFields() {
 //            print("Email:\t"+emailTextField.text!+"\nPassword:\t"+passwordTextField.text!)
             
             Auth.auth().signIn(withEmail: emailTextField.text!, password: passwordTextField.text!) { (authResult, err) in
                 
                 if let err = err {
+                    self.activityIndicatorView.isHidden = true
                     createAlert(view: self, title: "Error", message: err.localizedDescription)
                 } else {
                     user = authResult!.user
-                    createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
                     // Segeue to main
+                    self.performSegue(withIdentifier: "loginToMain", sender: self)
                 }
                 
             }
             
         } else {
+            activityIndicatorView.isHidden = true
             createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
         }
         

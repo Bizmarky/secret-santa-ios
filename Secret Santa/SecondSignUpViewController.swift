@@ -22,6 +22,8 @@ class SecondSignUpViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var submitButton: UIButton!
         
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,9 +40,13 @@ class SecondSignUpViewController: UIViewController, UITextFieldDelegate {
         submitButton.layer.cornerRadius = submitButton.frame.height/4
         
         emailField.becomeFirstResponder()
+        
+        activityIndicatorView.isHidden = true
     }
     
     @IBAction func submitAction(_ sender: Any) {
+        resignFirstResponder()
+        activityIndicatorView.isHidden = false
         if checkTextFields() {
             
 //            print("First Name:\t"+firstName+"\nLast Name:\t"+lastName+"\nEmail:\t"+emailField.text!+"\nPassword:\t"+passwordField.text!)
@@ -48,6 +54,7 @@ class SecondSignUpViewController: UIViewController, UITextFieldDelegate {
             Auth.auth().createUser(withEmail: emailField.text!, password: passwordField.text!) { (authResult, err) in
                 
                 if let err = err {
+                    self.activityIndicatorView.isHidden = true
                     createAlert(view: self, title: "Error", message: err.localizedDescription)
                 } else {
                     user = authResult!.user
@@ -58,14 +65,18 @@ class SecondSignUpViewController: UIViewController, UITextFieldDelegate {
                         ]]) { (err) in
                          
                             if let err = err {
+                                self.activityIndicatorView.isHidden = true
                                 createAlert(view: self, title: "Error", message: err.localizedDescription)
                             } else {
                                 authResult!.user.sendEmailVerification { (err) in
                                     if let err = err {
+                                        self.activityIndicatorView.isHidden = true
                                         createAlert(view: self, title: "Error", message: err.localizedDescription)
                                     } else {
-                                        createAlert(view: self, title: "Success", message: "Account successfully created!\n A verification email has been sent to "+self.emailField.text!)
-                                        // Segue to main
+                                        createAlert(view: self, title: "Success", message: "Account successfully created!\n A verification email has been sent to "+self.emailField.text!, completion: { (complete) in
+                                            // Segue to main
+                                            self.performSegue(withIdentifier: "setupToMain", sender: self)
+                                        })
                                     }
                                 }
                             }
@@ -73,6 +84,7 @@ class SecondSignUpViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         } else {
+            activityIndicatorView.isHidden = true
             createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
         }
         

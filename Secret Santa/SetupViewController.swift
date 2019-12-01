@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 
 class SetupViewController: UIViewController {
     
@@ -22,6 +23,28 @@ class SetupViewController: UIViewController {
     @IBOutlet weak var nameField: UITextField!
     
     @IBOutlet weak var submitButton: UIButton!
+    
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    
+    @IBAction func logoutAction(_ sender: Any) {
+        let alert = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action) in
+            
+            self.activityIndicatorView.isHidden = false
+
+            let firebaseAuth = Auth.auth()
+            
+            do {
+                try firebaseAuth.signOut()
+                self.performSegue(withIdentifier: "logoutSegue", sender: self)
+            } catch let signOutError as NSError {
+                createAlert(view: self, title: "Error", message: signOutError.localizedDescription)
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +63,8 @@ class SetupViewController: UIViewController {
         userTypeAction(self)
                 
         userGroup = []
+        
+        activityIndicatorView.isHidden = true
         
     }
     
@@ -160,6 +185,15 @@ class SetupViewController: UIViewController {
 func createAlert(view: UIViewController, title: String?, message: String?) {
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+    alert.addAction(action)
+    view.present(alert, animated: true, completion: nil)
+}
+
+func createAlert(view: UIViewController, title: String?, message: String?, completion: @escaping (Bool) -> ()) {
+    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    let action = UIAlertAction(title: "OK", style: .default) { (action) in
+        completion(true)
+    }
     alert.addAction(action)
     view.present(alert, animated: true, completion: nil)
 }
