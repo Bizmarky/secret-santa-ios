@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAuth
 import FirebaseFirestore
 
 var wishlist: [String]!
@@ -15,3 +16,5 @@ let db = Firestore.firestore()
 var uid: String!
 var ref: DocumentReference? = nil
 var userGroup: [Person]!
+var user: User!
+var rootNav: UINavigationController!

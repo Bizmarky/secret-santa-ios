@@ -54,7 +54,7 @@ class SetupViewController: UIViewController {
     @IBAction func buttonAction(_ sender: Any) {
         
         if !checkTextFields() {
-            createAlert(title: "Error", message: "Text fields cannot be blank")
+            createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
         }
         
         if host {
@@ -65,7 +65,7 @@ class SetupViewController: UIViewController {
             
             db.collection(groupIDField.text!).getDocuments() { (querySnapshot, err) in
                 if let err = err {
-                    createAlert(title: "Error", message: err.localizedDescription)
+                    createAlert(view: self, title: "Error", message: err.localizedDescription)
                 } else {
                     if querySnapshot!.documents.count == 0 {
                         ref = db.collection(self.groupIDField.text!).addDocument(data: [
@@ -74,7 +74,7 @@ class SetupViewController: UIViewController {
                             "host":true
                             ]) { err in
                                 if let err = err {
-                                    createAlert(title: "Error", message: err.localizedDescription)
+                                    createAlert(view: self, title: "Error", message: err.localizedDescription)
                                 } else {
                                     uid = ref!.documentID
                                     print(uid)
@@ -83,7 +83,7 @@ class SetupViewController: UIViewController {
                                 }
                             }
                     } else {
-                        createAlert(title: "Group already exists", message: "Please choose a new Group ID")
+                        createAlert(view: self, title: "Group already exists", message: "Please choose a new Group ID")
                     }
                 }
             }
@@ -95,7 +95,7 @@ class SetupViewController: UIViewController {
             
             db.collection(groupIDField.text!).getDocuments() { (querySnapshot, err) in
                 if let err = err {
-                    createAlert(title: "Error", message: err.localizedDescription)
+                    createAlert(view: self, title: "Error", message: err.localizedDescription)
                 } else {
                     if querySnapshot!.documents.count != 0 {
                         for doc in querySnapshot!.documents {
@@ -114,7 +114,7 @@ class SetupViewController: UIViewController {
                             "host":false
                             ]) { err in
                                 if let err = err {
-                                    createAlert(title: "Error", message: err.localizedDescription)
+                                    createAlert(view: self, title: "Error", message: err.localizedDescription)
                                 } else {
                                     uid = ref!.documentID
                                     print(uid)
@@ -123,7 +123,7 @@ class SetupViewController: UIViewController {
                                 }
                         }
                     } else {
-                        createAlert(title: "Group does not exist", message: "Please check Group ID")
+                        createAlert(view: self, title: "Group does not exist", message: "Please check Group ID")
                     }
                 }
             }
@@ -157,9 +157,9 @@ class SetupViewController: UIViewController {
     
 }
 
-func createAlert(title: String?, message: String?) {
+func createAlert(view: UIViewController, title: String?, message: String?) {
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let action = UIAlertAction(title: "OK", style: .default, handler: nil)
     alert.addAction(action)
-    UIApplication.shared.windows[0].rootViewController!.present(alert, animated: true, completion: nil)
+    view.present(alert, animated: true, completion: nil)
 }

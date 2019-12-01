@@ -17,7 +17,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var lastNameField: UITextField!
     
     @IBOutlet weak var nextButton: UIButton!
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -33,6 +33,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         lastNameField.translatesAutoresizingMaskIntoConstraints = false
         lastNameField.layer.cornerRadius = lastNameField.frame.height/4
         
+        firstNameField.becomeFirstResponder()
+        
     }
     
     @IBAction func nextAction(_ sender: Any) {
@@ -40,7 +42,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         if checkTextFields() {
             self.performSegue(withIdentifier: "signUpSegue", sender: self)
         } else {
-            createAlert(title: "Error", message: "Text fields cannot be blank")
+            createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
         }
         
     }
@@ -50,7 +52,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField.isEqual(firstNameField.tag) {
+        if textField.isEqual(firstNameField) {
             lastNameField.becomeFirstResponder()
         } else {
             resignFirstResponder()

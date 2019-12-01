@@ -16,8 +16,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var passwordTextField: UITextField!
     
-    @IBOutlet weak var loginButton: UIButton!    
-    
+    @IBOutlet weak var loginButton: UIButton!
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -33,14 +33,29 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         passwordTextField.translatesAutoresizingMaskIntoConstraints = false
         passwordTextField.layer.cornerRadius = passwordTextField.frame.height/4
         
+        emailTextField.becomeFirstResponder()
+        
     }
     
     @IBAction func loginAction(_ sender: Any) {
         
         if checkTextFields() {
-            print("Email:\t"+emailTextField.text!+"\nPassword:\t"+passwordTextField.text!)
+//            print("Email:\t"+emailTextField.text!+"\nPassword:\t"+passwordTextField.text!)
+            
+            Auth.auth().signIn(withEmail: emailTextField.text!, password: passwordTextField.text!) { (authResult, err) in
+                
+                if let err = err {
+                    createAlert(view: self, title: "Error", message: err.localizedDescription)
+                } else {
+                    user = authResult!.user
+                    createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
+                    // Segeue to main
+                }
+                
+            }
+            
         } else {
-            createAlert(title: "Error", message: "Text fields cannot be blank")
+            createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
         }
         
     }
