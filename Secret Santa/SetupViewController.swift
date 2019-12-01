@@ -22,10 +22,6 @@ class SetupViewController: UIViewController {
     @IBOutlet weak var nameField: UITextField!
     
     @IBOutlet weak var submitButton: UIButton!
-    
-    @IBAction func submitButton(_sender: Any){
-        performSegue(withIdentifier: "SetupToNavigation", sender: self)
-    }
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,7 +54,7 @@ class SetupViewController: UIViewController {
     @IBAction func buttonAction(_ sender: Any) {
         
         if !checkTextFields() {
-            self.createAlert(title: "Error", message: "Text fields cannot be blank")
+            createAlert(title: "Error", message: "Text fields cannot be blank")
         }
         
         if host {
@@ -69,7 +65,7 @@ class SetupViewController: UIViewController {
             
             db.collection(groupIDField.text!).getDocuments() { (querySnapshot, err) in
                 if let err = err {
-                    self.createAlert(title: "Error", message: err.localizedDescription)
+                    createAlert(title: "Error", message: err.localizedDescription)
                 } else {
                     if querySnapshot!.documents.count == 0 {
                         ref = db.collection(self.groupIDField.text!).addDocument(data: [
@@ -78,15 +74,16 @@ class SetupViewController: UIViewController {
                             "host":true
                             ]) { err in
                                 if let err = err {
-                                    self.createAlert(title: "Error", message: err.localizedDescription)
+                                    createAlert(title: "Error", message: err.localizedDescription)
                                 } else {
                                     uid = ref!.documentID
                                     print(uid)
                                     // Segue to next screen
+//                                    performSegue(withIdentifier: "SetupToMain", sender: self)
                                 }
                             }
                     } else {
-                        self.createAlert(title: "Group already exists", message: "Please choose a new Group ID")
+                        createAlert(title: "Group already exists", message: "Please choose a new Group ID")
                     }
                 }
             }
@@ -98,7 +95,7 @@ class SetupViewController: UIViewController {
             
             db.collection(groupIDField.text!).getDocuments() { (querySnapshot, err) in
                 if let err = err {
-                    self.createAlert(title: "Error", message: err.localizedDescription)
+                    createAlert(title: "Error", message: err.localizedDescription)
                 } else {
                     if querySnapshot!.documents.count != 0 {
                         for doc in querySnapshot!.documents {
@@ -117,15 +114,16 @@ class SetupViewController: UIViewController {
                             "host":false
                             ]) { err in
                                 if let err = err {
-                                    self.createAlert(title: "Error", message: err.localizedDescription)
+                                    createAlert(title: "Error", message: err.localizedDescription)
                                 } else {
                                     uid = ref!.documentID
                                     print(uid)
                                     // Segue to next screen
+//                                    performSegue(withIdentifier: "SetupToMain", sender: self)
                                 }
                         }
                     } else {
-                        self.createAlert(title: "Group does not exist", message: "Please check Group ID")
+                        createAlert(title: "Group does not exist", message: "Please check Group ID")
                     }
                 }
             }
@@ -157,11 +155,11 @@ class SetupViewController: UIViewController {
         return groupIDField.text != "" && nameField.text != ""
     }
     
-    func createAlert(title: String?, message: String?) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alert.addAction(action)
-        self.present(alert, animated: true, completion: nil)
-    }
-    
+}
+
+func createAlert(title: String?, message: String?) {
+    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+    alert.addAction(action)
+    UIApplication.shared.windows[0].rootViewController!.present(alert, animated: true, completion: nil)
 }

@@ -10,23 +10,53 @@ import Foundation
 import UIKit
 import FirebaseAuth
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var emailTextField: UITextField!
     
-    @IBOutlet weak var passwordTextEmail: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
     
-    @IBOutlet weak var loginButton: UIButton!
-    
-    @IBAction func loginButton(_ sender: Any) {
-        performSegue(withIdentifier: "LoginToNav", sender: self)
-    }
-    
+    @IBOutlet weak var loginButton: UIButton!    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        
+        loginButton.translatesAutoresizingMaskIntoConstraints = false
         loginButton.layer.cornerRadius = loginButton.frame.height/4
         
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        emailTextField.layer.cornerRadius = emailTextField.frame.height/4
+        
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        passwordTextField.layer.cornerRadius = passwordTextField.frame.height/4
+        
+    }
+    
+    @IBAction func loginAction(_ sender: Any) {
+        
+        if checkTextFields() {
+            print("Email:\t"+emailTextField.text!+"\nPassword:\t"+passwordTextField.text!)
+        } else {
+            createAlert(title: "Error", message: "Text fields cannot be blank")
+        }
+        
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField.isEqual(emailTextField) {
+            passwordTextField.becomeFirstResponder()
+        } else {
+            resignFirstResponder()
+            loginAction(self)
+        }
+        return true
+    }
+    
+    func checkTextFields() -> Bool {
+        return emailTextField.text != "" && passwordTextField.text != ""
     }
     
 }
