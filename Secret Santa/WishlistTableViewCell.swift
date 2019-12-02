@@ -23,15 +23,6 @@ class wishlistTableViewCell: UITableViewCell, UITextFieldDelegate {
         contentView.addSubview(textField)
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.textField.resignFirstResponder()
-        return true
-    }
-    
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        wishlist[self.tag] = self.textField.text!
-    }
-    
     func getText() -> String {
         return self.textField.text!
     }

@@ -9,9 +9,22 @@
 import Foundation
 import UIKit
 
-class RoomDisplayViewController: UITableViewController {
+class RoomDisplayViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    @IBOutlet weak var roomTableView: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.roomTableView.delegate = self
+        self.roomTableView.dataSource = self
+    }
+    
+    @IBAction func cancelAction(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         var sections = 0
         if !hostRoomList.isEmpty {
             sections += 1
@@ -22,7 +35,7 @@ class RoomDisplayViewController: UITableViewController {
         return sections
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         var count = 0
         
@@ -42,7 +55,35 @@ class RoomDisplayViewController: UITableViewController {
         
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 36
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 56
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
+        var title = ""
+        
+        if section == 0 {
+            
+            if !hostRoomList.isEmpty {
+                title = "Hosting"
+            } else if !joinRoomList.isEmpty {
+                title = "Joined"
+            }
+            
+        } else {
+            title = "Joined"
+        }
+        
+        return title
+        
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell2")
         
         if indexPath.section == 0 {
@@ -54,11 +95,13 @@ class RoomDisplayViewController: UITableViewController {
         } else {
             cell.textLabel?.text = joinRoomList[indexPath.row]
         }
-                
+    
+        cell.textLabel?.font = .boldSystemFont(ofSize: 16)
+        
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectRoom(ID: (tableView.cellForRow(at: indexPath)?.textLabel?.text)!)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -67,7 +110,6 @@ class RoomDisplayViewController: UITableViewController {
         let presenter = (presentingViewController as! UINavigationController).viewControllers[0] as! ViewController
         presenter.roomID = ID
         dismiss(animated: true) {
-            presenter.activityIndicatorView.isHidden = false
             presenter.getRoomData()
         }
     }

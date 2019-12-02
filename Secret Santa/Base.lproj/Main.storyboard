@@ -22,7 +22,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VMm-Gi-rAg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1242" y="-1462"/>
+            <point key="canvasLocation" x="1241" y="-1462"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="5LN-cU-UBs">
@@ -358,7 +358,9 @@
                     </navigationItem>
                     <connections>
                         <outlet property="activityIndicatorView" destination="FrI-4u-mVW" id="Oca-0w-IEu"/>
-                        <segue destination="mse-z6-5JB" kind="presentation" identifier="roomDisplay" id="hyB-6R-S6i"/>
+                        <segue destination="dEQ-rU-DHc" kind="presentation" identifier="logoutSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="45O-xH-XsU"/>
+                        <segue destination="Dsa-vB-fLn" kind="presentation" identifier="homeToMain" modalPresentationStyle="fullScreen" modalTransitionStyle="coverVertical" id="Q0Y-d1-PDS"/>
+                        <segue destination="ixc-kG-7kN" kind="presentation" identifier="roomDisplay" id="H4O-jL-QBG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BYH-aL-Z63" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -382,16 +384,16 @@
             </objects>
             <point key="canvasLocation" x="-794" y="-64"/>
         </scene>
-        <!--Room Display View Controller-->
+        <!--Table View Controller-->
         <scene sceneID="Eup-Xx-f9P">
             <objects>
-                <tableViewController id="mse-z6-5JB" customClass="RoomDisplayViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="mse-z6-5JB" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Xcn-5w-TJV">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="VZH-Tx-sUC">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell2" id="VZH-Tx-sUC">
                                 <rect key="frame" x="0.0" y="28" width="414" height="43.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VZH-Tx-sUC" id="zy0-a8-jbp">
@@ -409,6 +411,63 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IjM-pr-vOG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-158" y="1391"/>
+        </scene>
+        <!--Room Display View Controller-->
+        <scene sceneID="WOB-xj-IEQ">
+            <objects>
+                <viewController id="ixc-kG-7kN" customClass="RoomDisplayViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="hTD-7w-f5X">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fJI-4f-Fu0">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="664"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationWidth="10" reuseIdentifier="cell2" id="0gn-Rj-X6B">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0gn-Rj-X6B" id="0JQ-EP-3IE">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qnt-UQ-7oV">
+                                <rect key="frame" x="0.0" y="664" width="414" height="52"/>
+                                <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="rLr-Zg-4fM"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="27"/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancelAction:" destination="ixc-kG-7kN" eventType="touchUpInside" id="CU5-WV-wlk"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="CKP-gt-ct8" firstAttribute="trailing" secondItem="fJI-4f-Fu0" secondAttribute="trailing" id="5pN-xI-fVW"/>
+                            <constraint firstItem="qnt-UQ-7oV" firstAttribute="top" secondItem="fJI-4f-Fu0" secondAttribute="bottom" id="7y6-PM-NIN"/>
+                            <constraint firstItem="CKP-gt-ct8" firstAttribute="bottom" secondItem="qnt-UQ-7oV" secondAttribute="bottom" id="RqI-ML-bqI"/>
+                            <constraint firstItem="fJI-4f-Fu0" firstAttribute="top" secondItem="CKP-gt-ct8" secondAttribute="top" id="cP4-kH-Zuh"/>
+                            <constraint firstItem="qnt-UQ-7oV" firstAttribute="leading" secondItem="CKP-gt-ct8" secondAttribute="leading" id="cXb-rG-d0d"/>
+                            <constraint firstItem="CKP-gt-ct8" firstAttribute="trailing" secondItem="qnt-UQ-7oV" secondAttribute="trailing" id="j8y-5D-npT"/>
+                            <constraint firstItem="fJI-4f-Fu0" firstAttribute="leading" secondItem="CKP-gt-ct8" secondAttribute="leading" id="kAW-He-szd"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="CKP-gt-ct8"/>
+                    </view>
+                    <connections>
+                        <outlet property="roomTableView" destination="fJI-4f-Fu0" id="ZC9-2t-afB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aDf-Tk-om4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="558" y="1391"/>
         </scene>
         <!--Wishlist View Controller-->
         <scene sceneID="207-n4-oSq">
@@ -572,7 +631,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="GEO-PN-qvl"/>
-        <segue reference="U81-SO-RvW"/>
+        <segue reference="Q0Y-d1-PDS"/>
+        <segue reference="45O-xH-XsU"/>
     </inferredMetricsTieBreakers>
 </document>

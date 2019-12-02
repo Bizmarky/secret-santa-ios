@@ -17,6 +17,7 @@ class SetupViewController: UIViewController {
     var join: Bool!
     var titleText: UILabel!
     var roomID: String!
+    var fromHome = false
     
     @IBOutlet weak var userTypeControl: UISegmentedControl!
     
@@ -29,29 +30,35 @@ class SetupViewController: UIViewController {
     @IBOutlet weak var logoutButton: UIButton!
     
     @IBAction func logoutAction(_ sender: Any) {
-        let alert = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action) in
-            
-            self.activityIndicatorView.isHidden = false
+        if fromHome {
+            dismiss(animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action) in
+                
+                self.activityIndicatorView.isHidden = false
 
-            let firebaseAuth = Auth.auth()
-            
-            do {
-                try firebaseAuth.signOut()
-                user = nil
-                self.performSegue(withIdentifier: "logoutSegue", sender: self)
-            } catch let signOutError as NSError {
-                createAlert(view: self, title: "Error", message: signOutError.localizedDescription)
-            }
-        }))
-        self.present(alert, animated: true, completion: nil)
+                let firebaseAuth = Auth.auth()
+                
+                do {
+                    try firebaseAuth.signOut()
+                    user = nil
+                    self.performSegue(withIdentifier: "logoutSegue", sender: self)
+                } catch let signOutError as NSError {
+                    createAlert(view: self, title: "Error", message: signOutError.localizedDescription)
+                }
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
         
     override func viewDidLoad() {
         super.viewDidLoad()
                 
+        setLogoutButton()
+        
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         submitButton.layer.cornerRadius = submitButton.frame.height/4
         
@@ -74,6 +81,12 @@ class SetupViewController: UIViewController {
         hideAll()
         checkRoom()
                 
+    }
+    
+    func setLogoutButton() {
+        if fromHome {
+            logoutButton.setTitle("Cancel", for: .normal)
+        }
     }
     
     func hideAll() {
@@ -110,13 +123,20 @@ class SetupViewController: UIViewController {
                     self.showAll()
                     self.activityIndicatorView.isHidden = true
                 } else {
-                    for room in dataRooms {
-                        joinRoomList.append(room)
-                    }
                     for room in hostRooms {
                         hostRoomList.append(room)
                     }
-                    self.prepareRoom()
+                    for room in dataRooms {
+                        if !hostRoomList.contains(room) {
+                            joinRoomList.append(room)
+                        }
+                    }
+                    if !self.fromHome {
+                        self.prepareRoom()
+                    } else {
+                        self.showAll()
+                        self.activityIndicatorView.isHidden = true
+                    }
                 }
             }
         }
@@ -127,7 +147,6 @@ class SetupViewController: UIViewController {
         
         if defaults.object(forKey: "currentRoom") != nil {
             self.roomID = defaults.string(forKey: "currentRoom")
-            print("Defaults: "+self.roomID)
         } else if !hostRoomList.isEmpty {
             if hostRoomList.count == 1 {
                 self.roomID = hostRoomList[0]
@@ -158,6 +177,12 @@ class SetupViewController: UIViewController {
             return
         }
         
+        if joinRoomList.contains(groupIDField.text!) || hostRoomList.contains(groupIDField.text!) {
+            activityIndicatorView.isHidden = true
+            createAlert(view: self, title: "Error", message: "You are already in the group \""+self.groupIDField.text!+"\"")
+            return
+        }
+        
         if host {
             
             // Firebase check room id
@@ -170,7 +195,7 @@ class SetupViewController: UIViewController {
                     createAlert(view: self, title: "Error", message: err.localizedDescription)
                 } else {
                     if !querySnapshot!.exists {
-                        db.collection("rooms").document(self.groupIDField.text!).setData([user.uid:wishlist!, "locked":false, "host":user.uid]) { err in
+                        db.collection("rooms").document(self.groupIDField.text!).setData([user.uid:[], "locked":false, "host":user.uid]) { err in
                             if let err = err {
                                 self.activityIndicatorView.isHidden = true
                                 createAlert(view: self, title: "Error", message: err.localizedDescription)
@@ -244,7 +269,7 @@ class SetupViewController: UIViewController {
                             }
                         }
                         
-                        db.collection("rooms").document(self.groupIDField.text!).updateData([user.uid:wishlist!]) { err in
+                        db.collection("rooms").document(self.groupIDField.text!).updateData([user.uid:[]]) { err in
                                 if let err = err {
                                     self.activityIndicatorView.isHidden = true
                                     createAlert(view: self, title: "Error", message: err.localizedDescription)
@@ -299,6 +324,7 @@ class SetupViewController: UIViewController {
         if segue.identifier == "mainToHome" {
             let controller = (segue.destination as! UINavigationController).viewControllers[0] as! ViewController
             controller.roomID = self.roomID
+            controller.getRoomData()
         }
     }
     

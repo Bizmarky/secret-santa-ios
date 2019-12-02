@@ -11,7 +11,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-var wishlist: [String]! = ["Toys", "Games", "Candy", "RC Car", "Stuff"]
+var wishlist: [String]!
 let db = Firestore.firestore()
 var userGroup: [Person]!
 var dataGroup: [[String:Any]]!

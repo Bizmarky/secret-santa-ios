@@ -15,6 +15,8 @@ class ViewController: UIViewController {
     let menuAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     var roomID: String!
     var roomHost: String!
+    var listDownloadTimer: Timer!
+    var activityTimer: Timer!
     
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
@@ -24,26 +26,72 @@ class ViewController: UIViewController {
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        getRoomData()
+    @objc func getLists() {
+        if hostRoomList.isEmpty && joinRoomList.isEmpty {
+            checkRoom()
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-                                
-        menuAlert.addAction(UIAlertAction(title: "Rooms", style: .default, handler: { (action) in
-//            self.performSegue(withIdentifier: "roomDisplay", sender: self)
-            let rd = RoomDisplayViewController()
-            self.present(rd, animated: true, completion: nil)
+        listDownloadTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(getLists), userInfo: nil, repeats: false)
+        
+        setupMenuActionSheet()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showGroups))
+        tap.numberOfTouchesRequired = 1
+        tap.numberOfTapsRequired = 1
+        self.navigationController?.navigationBar.addGestureRecognizer(tap)
+        
+//        pairPeople()
+    }
+    
+    func checkRoom() {
+        db.collection("users").document(user.uid).getDocument { (document, err) in
+            if let err = err {
+                print(err)
+            } else {
+                let data = document?.data()?.values.first as! [String:Any]
+                
+                let dataRooms = data["rooms"] as! [String]
+                let hostRooms = data["host"] as! [String]
+                
+                for room in hostRooms {
+                    hostRoomList.append(room)
+                }
+                for room in dataRooms {
+                    if !hostRoomList.contains(room) {
+                        joinRoomList.append(room)
+                    }
+                }
+            }
+        }
+    }
+    
+    @objc func showGroups() {
+        performSegue(withIdentifier: "roomDisplay", sender: self)
+//        let rd = RoomDisplayViewController()
+//        self.present(rd, animated: true, completion: nil)
+    }
+    
+    func setupMenuActionSheet() {
+        
+        menuAlert.addAction(UIAlertAction(title: "Groups", style: .default, handler: { (action) in
+            self.performSegue(withIdentifier: "roomDisplay", sender: self)
+//            let rd = RoomDisplayViewController()
+//            self.present(rd, animated: true, completion: nil)
+        }))
+        menuAlert.addAction(UIAlertAction(title: "Create/Join", style: .default, handler: { (action) in
+            self.performSegue(withIdentifier: "homeToMain", sender: self)
+        }))
+        menuAlert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) in
+            // Present account settings
         }))
         menuAlert.addAction(UIAlertAction(title: "Logout", style: .destructive, handler: { (action) in
             self.logoutAction()
         }))
         menuAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
-//        pairPeople()
     }
     
     func logoutAction() {
@@ -69,9 +117,9 @@ class ViewController: UIViewController {
     func getRoomData() {
         
         if roomID == "" {
-//            performSegue(withIdentifier: "roomDisplay", sender: self)
-            let rd = RoomDisplayViewController()
-            self.present(rd, animated: true, completion: nil)
+            performSegue(withIdentifier: "roomDisplay", sender: self)
+//            let rd = RoomDisplayViewController()
+//            self.present(rd, animated: true, completion: nil)
         }
         db.collection("rooms").document(roomID).getDocument { (querySnapshot, err) in
             if let err = err {
@@ -127,9 +175,14 @@ class ViewController: UIViewController {
                         }
                         
                     }
-                    
+
                     self.navigationItem.title = self.roomID
-                    self.activityIndicatorView.isHidden = true
+                    self.activityTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (timer) in
+                        if self.activityIndicatorView != nil {
+                            self.activityTimer.invalidate()
+                            self.activityIndicatorView.isHidden = true
+                        }
+                    })
                     defaults.set(self.roomID, forKey: "currentRoom")
                 }
             }
@@ -144,7 +197,6 @@ class ViewController: UIViewController {
 //        pairPeople()
         
     }
-    
     
     // Assigns each person with their secret santa
     
@@ -191,6 +243,9 @@ class ViewController: UIViewController {
         if segue.identifier == "homeToWish" {
             let controller = segue.destination as! WishlistViewController
             controller.roomID = self.roomID
+        } else if segue.identifier == "homeToMain" {
+            let controller = (segue.destination as! UINavigationController).viewControllers[0] as! SetupViewController
+            controller.fromHome = true
         }
     }
 
