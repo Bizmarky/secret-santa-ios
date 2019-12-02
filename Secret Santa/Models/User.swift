@@ -11,9 +11,10 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-var wishlist: [String]!
+var wishlist: [String]! = ["Toys", "Games", "Candy", "RC Car", "Stuff"]
 let db = Firestore.firestore()
-var uid: String!
-var ref: DocumentReference? = nil
 var userGroup: [Person]!
+var dataGroup: [[String:Any]]!
 var user: User!
+var hostRoomList: [String]!
+var joinRoomList: [String]!

@@ -20,11 +20,12 @@ class SetupViewController: UIViewController {
     @IBOutlet weak var userTypeControl: UISegmentedControl!
     
     @IBOutlet weak var groupIDField: UITextField!
-    @IBOutlet weak var nameField: UITextField!
     
     @IBOutlet weak var submitButton: UIButton!
     
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    
+    @IBOutlet weak var logoutButton: UIButton!
     
     @IBAction func logoutAction(_ sender: Any) {
         let alert = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
@@ -37,6 +38,7 @@ class SetupViewController: UIViewController {
             
             do {
                 try firebaseAuth.signOut()
+                user = nil
                 self.performSegue(withIdentifier: "logoutSegue", sender: self)
             } catch let signOutError as NSError {
                 createAlert(view: self, title: "Error", message: signOutError.localizedDescription)
@@ -48,6 +50,9 @@ class SetupViewController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        hideAll()
+        checkRoom()
         
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         submitButton.layer.cornerRadius = submitButton.frame.height/4
@@ -63,9 +68,60 @@ class SetupViewController: UIViewController {
         userTypeAction(self)
                 
         userGroup = []
+        dataGroup = []
         
-        activityIndicatorView.isHidden = true
-        
+        hostRoomList = []
+        joinRoomList = []
+                
+    }
+    
+    func hideAll() {
+        logoutButton.alpha = 0
+        userTypeControl.alpha = 0
+        groupIDField.alpha = 0
+        submitButton.alpha = 0
+    }
+    
+    func showAll() {
+        UIView.animate(withDuration: 0.2) {
+            self.logoutButton.alpha = 1
+            self.userTypeControl.alpha = 1
+            self.groupIDField.alpha = 1
+            self.submitButton.alpha = 1
+        }
+    }
+    
+    func checkRoom() {
+        db.collection("users").document(user.uid).getDocument { (document, err) in
+            if let err = err {
+                print(err)
+                self.showAll()
+                self.activityIndicatorView.isHidden = true
+            } else {
+                let data = document?.data()?.values.first as! [String:Any]
+                
+                let dataRooms = data["rooms"] as! [String]
+                let hostRooms = data["host"] as! [String]
+                
+                if dataRooms.isEmpty && hostRooms.isEmpty {
+                    self.showAll()
+                    self.activityIndicatorView.isHidden = true
+                } else {
+                    for room in dataRooms {
+                        joinRoomList.append(room)
+                    }
+                    for room in hostRooms {
+                        hostRoomList.append(room)
+                    }
+                    self.prepareRoom()
+                }
+            }
+        }
+    }
+    
+    func prepareRoom() {
+        print("SEE IF ROOM/HOST LIST CONTAINS 1 ITEM THEN LOAD THAT, OTHERWISE BRING UP THE VC AND CHOOSE ROOM")
+        self.performSegue(withIdentifier: "mainToHome", sender: self)
     }
     
     @IBAction func userTypeAction(_ sender: Any) {
@@ -77,81 +133,119 @@ class SetupViewController: UIViewController {
     }
     
     @IBAction func buttonAction(_ sender: Any) {
+        activityIndicatorView.isHidden = false
         
         if !checkTextFields() {
+            activityIndicatorView.isHidden = true
             createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
+            return
         }
         
         if host {
             
             // Firebase check room id
             // Firebase create room id
-            // Firebase join room with uid as node and name and wishlist as children
+            // Firebase join room with uid as key and wishlist as children
             
-            db.collection(groupIDField.text!).getDocuments() { (querySnapshot, err) in
+            db.collection("rooms").document(groupIDField.text!).getDocument(completion: { (querySnapshot, err) in
                 if let err = err {
+                    self.activityIndicatorView.isHidden = true
                     createAlert(view: self, title: "Error", message: err.localizedDescription)
                 } else {
-                    if querySnapshot!.documents.count == 0 {
-                        ref = db.collection(self.groupIDField.text!).addDocument(data: [
-                            "name":self.nameField.text!,
-                            "wishlist":[String](),
-                            "host":true
-                            ]) { err in
-                                if let err = err {
-                                    createAlert(view: self, title: "Error", message: err.localizedDescription)
-                                } else {
-                                    uid = ref!.documentID
-                                    print(uid)
-                                    // Segue to next screen
-//                                    performSegue(withIdentifier: "SetupToMain", sender: self)
+                    if !querySnapshot!.exists {
+                        db.collection("rooms").document(self.groupIDField.text!).setData([user.uid:wishlist!, "locked":false, "host":user.uid]) { err in
+                            if let err = err {
+                                self.activityIndicatorView.isHidden = true
+                                createAlert(view: self, title: "Error", message: err.localizedDescription)
+                            } else {
+                                db.collection("users").document(user.uid).updateData(["userdata.host": FieldValue.arrayUnion([self.groupIDField.text!])]) { (err) in
+                                    if let err = err {
+                                        self.activityIndicatorView.isHidden = true
+                                        createAlert(view: self, title: "Error", message: err.localizedDescription)
+                                    } else {
+                                        // Segue to home
+                                        self.performSegue(withIdentifier: "mainToHome", sender: self)
+                                    }
                                 }
+                                
                             }
-                    } else {
-                        createAlert(view: self, title: "Group already exists", message: "Please choose a new Group ID")
+                        }
+                    }
+                    if let data = querySnapshot?.data() {
+                        if data.count != 0 {
+                            self.activityIndicatorView.isHidden = true
+                            createAlert(view: self, title: "Group already exists", message: "Please choose a new Group ID")
+                        }
                     }
                 }
-            }
+            })
             
         } else if join {
             
             // Firebase check if room exists
             // Firebase download people data
             
-            db.collection(groupIDField.text!).getDocuments() { (querySnapshot, err) in
+            db.collection("rooms").document(groupIDField.text!).getDocument(completion: { (querySnapshot, err) in
                 if let err = err {
+                    self.activityIndicatorView.isHidden = true
                     createAlert(view: self, title: "Error", message: err.localizedDescription)
                 } else {
-                    if querySnapshot!.documents.count != 0 {
-                        for doc in querySnapshot!.documents {
-                            let data = doc.data()
-                            let personName = data["name"] as! String
-                            let personWishlist = data["wishlist"] as! [String]
-                            
-                            let person = Person(name: personName)
-                            person.setWishList(list: personWishlist)
-                            
-                            userGroup.append(person)
+                    let data = querySnapshot!.data()!
+                    if data.count != 0 {
+                        for key in data.keys {
+                            if key != "locked" && key != user.uid {
+                                let usrUID = key
+                                let usrList = data[key] as! [String]
+                                
+                                dataGroup.append([usrUID:usrList])
+                            }
                         }
-                        ref = db.collection(self.groupIDField.text!).addDocument(data: [
-                            "name":self.nameField.text!,
-                            "wishlist":[String](),
-                            "host":false
-                            ]) { err in
+                        
+                        for usr in dataGroup {
+                            let usrUID = usr.keys.first!
+                            
+                            db.collection("users").document(usrUID).getDocument { (document, err) in
+                                
                                 if let err = err {
+                                    print(err)
+                                } else  if let _ = document, document!.exists {
+                                    let data = document!.data() as! [String:String]
+                                    
+                                    let personName = data["first"]! + " " + data["last"]!
+                                    let personWishlist = usr[usrUID] as! [String]
+                                    
+                                    let person = Person(name: personName)
+                                    person.setWishList(list: personWishlist)
+                                    userGroup.append(person)
+
+                                } else {
+                                    print(usrUID+" does not exist")
+                                }
+                            }
+                        }
+                        
+                        db.collection("rooms").document(self.groupIDField.text!).updateData([user.uid:wishlist!]) { err in
+                                if let err = err {
+                                    self.activityIndicatorView.isHidden = true
                                     createAlert(view: self, title: "Error", message: err.localizedDescription)
                                 } else {
-                                    uid = ref!.documentID
-                                    print(uid)
-                                    // Segue to next screen
-//                                    performSegue(withIdentifier: "SetupToMain", sender: self)
+                                    db.collection("users").document(user.uid).updateData(["userdata.rooms" : FieldValue.arrayUnion([self.groupIDField.text!])]) { (err) in
+                                        if let err = err {
+                                            self.activityIndicatorView.isHidden = true
+                                            createAlert(view: self, title: "Error", message: err.localizedDescription)
+                                        } else {
+                                            // Segue to home
+                                            self.performSegue(withIdentifier: "mainToHome", sender: self)
+                                        }
+                                    }
                                 }
                         }
                     } else {
+                        self.activityIndicatorView.isHidden = true
                         createAlert(view: self, title: "Group does not exist", message: "Please check Group ID")
                     }
                 }
-            }
+            })
             
         }
     }
@@ -177,7 +271,7 @@ class SetupViewController: UIViewController {
     }
     
     func checkTextFields() -> Bool {
-        return groupIDField.text != "" && nameField.text != ""
+        return groupIDField.text != ""
     }
     
 }

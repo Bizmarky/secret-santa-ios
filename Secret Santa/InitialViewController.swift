@@ -29,6 +29,7 @@ class InitialViewController: UIViewController {
         super.viewDidAppear(animated)
 
         Auth.auth().currentUser?.reload(completion: { (err) in
+            self.timeOut.invalidate()
             if let err = err {
                 print(err)
                 self.performSegue(withIdentifier: "initToLogin", sender: self)

@@ -58,10 +58,12 @@ class SecondSignUpViewController: UIViewController, UITextFieldDelegate {
                     createAlert(view: self, title: "Error", message: err.localizedDescription)
                 } else {
                     user = authResult!.user
-                    Firestore.firestore().collection("users").addDocument(data: [user.uid:[
+                    Firestore.firestore().collection("users").document(user.uid).setData(["userdata":[
                         "first":self.firstName,
                         "last":self.lastName,
-                        "email":self.emailField.text!
+                        "email":self.emailField.text!,
+                        "rooms":[],
+                        "host":[]
                         ]]) { (err) in
                          
                             if let err = err {

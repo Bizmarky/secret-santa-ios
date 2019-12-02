@@ -7,50 +7,73 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ViewController: UIViewController {
-    
-    @IBOutlet weak var nameTextField: UITextField!
-    
-    // list of people in the group
-    var group = [Person]()
-    
-    let p1 = Person(name:"Marcus")
-    let p2 = Person(name:"Augustine")
-    let p3 = Person(name:"Bobby")
-    let p4 = Person(name:"Joe")
-    let p5 = Person(name:"Maison")
-    let p6 = Person(name:"Sophia")
-    let p7 = Person(name:"Karen")
-    let p8 = Person(name:"Pam")
-    let p9 = Person(name:"Michael")
-    let p10 = Person(name:"Zack")
         
+    var isHost: Bool!
+    let menuAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+    
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    
+    @IBAction func menuAction(_ sender: Any) {
+        
+        self.present(menuAlert, animated: true, completion: nil)
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-                
-        wishlist = ["toys", "games", "candy", "electronics", "car"]
         
-        group.append(p1)
-        group.append(p2)
-        group.append(p3)
-        group.append(p4)
-        group.append(p5)
-        group.append(p6)
-        group.append(p7)
-        group.append(p8)
-        group.append(p9)
-        group.append(p10)
+        activityIndicatorView.isHidden = true
+        
+        getRoomData()
+        
+        menuAlert.addAction(UIAlertAction(title: "Rooms", style: .default, handler: { (action) in
+            print("Show Rooms in modal tableview")
+        }))
+        menuAlert.addAction(UIAlertAction(title: "Logout", style: .destructive, handler: { (action) in
+            self.logoutAction()
+        }))
+        menuAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+//        pairPeople()
+    }
+    
+    func logoutAction() {
+        let alert = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action) in
+            
+            self.activityIndicatorView.isHidden = false
 
-        pairPeople()
+            let firebaseAuth = Auth.auth()
+            
+            do {
+                try firebaseAuth.signOut()
+                user = nil
+                self.performSegue(withIdentifier: "logoutSegue", sender: self)
+            } catch let signOutError as NSError {
+                createAlert(view: self, title: "Error", message: signOutError.localizedDescription)
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func getRoomData() {
+        
+        // Get host
+        // Get users
+        // Get room name
+        
     }
     
     
     // Assigns each person with their secret santa
     
     func pairPeople() {
-        let count = group.count
+        let count = userGroup.count
         var remaining = [Int]()
         
         for i in 0..<count {
@@ -60,7 +83,7 @@ class ViewController: UIViewController {
         for i in 0..<count {
             var num = Int(arc4random_uniform(UInt32(remaining.count)))
             
-            while (group[num] == group[i]) {
+            while (userGroup[num] == userGroup[i]) {
                 num = Int(arc4random_uniform(UInt32(count)))
             }
                         
@@ -73,8 +96,8 @@ class ViewController: UIViewController {
             }
             
             let secret = remaining[index]
-            let secretP = group[secret]
-            group[i].assign(person: secretP)
+            let secretP = userGroup[secret]
+            userGroup[i].assign(person: secretP)
             
             remaining.remove(at: index)
 
