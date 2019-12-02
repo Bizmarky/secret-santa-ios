@@ -19,6 +19,7 @@ class wishlistTableViewCell: UITableViewCell, UITextFieldDelegate {
         self.textField.delegate = self
         self.textField.clearButtonMode = .whileEditing
         self.textLabel?.removeFromSuperview()
+        self.selectionStyle = .none
         contentView.addSubview(textField)
     }
     

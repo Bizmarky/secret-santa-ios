@@ -16,6 +16,7 @@ class SetupViewController: UIViewController {
     var host: Bool!
     var join: Bool!
     var titleText: UILabel!
+    var roomID: String!
     
     @IBOutlet weak var userTypeControl: UISegmentedControl!
     
@@ -50,10 +51,7 @@ class SetupViewController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        hideAll()
-        checkRoom()
-        
+                
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         submitButton.layer.cornerRadius = submitButton.frame.height/4
         
@@ -72,6 +70,9 @@ class SetupViewController: UIViewController {
         
         hostRoomList = []
         joinRoomList = []
+        
+        hideAll()
+        checkRoom()
                 
     }
     
@@ -80,6 +81,7 @@ class SetupViewController: UIViewController {
         userTypeControl.alpha = 0
         groupIDField.alpha = 0
         submitButton.alpha = 0
+        titleText.alpha = 0
     }
     
     func showAll() {
@@ -88,6 +90,7 @@ class SetupViewController: UIViewController {
             self.userTypeControl.alpha = 1
             self.groupIDField.alpha = 1
             self.submitButton.alpha = 1
+            self.titleText.alpha = 1
         }
     }
     
@@ -120,7 +123,21 @@ class SetupViewController: UIViewController {
     }
     
     func prepareRoom() {
-        print("SEE IF ROOM/HOST LIST CONTAINS 1 ITEM THEN LOAD THAT, OTHERWISE BRING UP THE VC AND CHOOSE ROOM")
+        self.roomID = ""
+        
+        if defaults.object(forKey: "currentRoom") != nil {
+            self.roomID = defaults.string(forKey: "currentRoom")
+            print("Defaults: "+self.roomID)
+        } else if !hostRoomList.isEmpty {
+            if hostRoomList.count == 1 {
+                self.roomID = hostRoomList[0]
+            }
+        } else if !joinRoomList.isEmpty {
+            if joinRoomList.count == 1 {
+                self.roomID = joinRoomList[0]
+            }
+        }
+        
         self.performSegue(withIdentifier: "mainToHome", sender: self)
     }
     
@@ -164,6 +181,7 @@ class SetupViewController: UIViewController {
                                         createAlert(view: self, title: "Error", message: err.localizedDescription)
                                     } else {
                                         // Segue to home
+                                        self.roomID = self.groupIDField.text!
                                         self.performSegue(withIdentifier: "mainToHome", sender: self)
                                     }
                                 }
@@ -195,13 +213,15 @@ class SetupViewController: UIViewController {
                         for key in data.keys {
                             if key != "locked" && key != user.uid {
                                 let usrUID = key
-                                let usrList = data[key] as! [String]
-                                
-                                dataGroup.append([usrUID:usrList])
+                                if usrUID != "host" {
+                                    let usrList = data[key] as! [String]
+                                    dataGroup.append([usrUID:usrList])
+                                }
                             }
                         }
                         
                         for usr in dataGroup {
+                            
                             let usrUID = usr.keys.first!
                             
                             db.collection("users").document(usrUID).getDocument { (document, err) in
@@ -235,6 +255,7 @@ class SetupViewController: UIViewController {
                                             createAlert(view: self, title: "Error", message: err.localizedDescription)
                                         } else {
                                             // Segue to home
+                                            self.roomID = self.groupIDField.text!
                                             self.performSegue(withIdentifier: "mainToHome", sender: self)
                                         }
                                     }
@@ -272,6 +293,13 @@ class SetupViewController: UIViewController {
     
     func checkTextFields() -> Bool {
         return groupIDField.text != ""
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "mainToHome" {
+            let controller = (segue.destination as! UINavigationController).viewControllers[0] as! ViewController
+            controller.roomID = self.roomID
+        }
     }
     
 }

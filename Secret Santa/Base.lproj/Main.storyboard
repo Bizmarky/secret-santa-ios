@@ -334,7 +334,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="Ziq-li-pfK">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="VH2-P7-gVd">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NLH-VZ-5ht">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NLH-VZ-5ht">
                                 <rect key="frame" x="20" y="5.6666666666666679" width="92" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
@@ -345,19 +345,20 @@
                             </button>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" style="plain" id="e42-8j-7JA">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qtC-Fb-OP8">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qtC-Fb-OP8">
                                 <rect key="frame" x="302" y="5.6666666666666679" width="92" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                 <state key="normal" title="Wishlist"/>
                                 <connections>
-                                    <segue destination="yXl-qr-OVs" kind="show" id="cfP-Ej-dcq"/>
+                                    <segue destination="yXl-qr-OVs" kind="show" identifier="homeToWish" id="cfP-Ej-dcq"/>
                                 </connections>
                             </button>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="activityIndicatorView" destination="FrI-4u-mVW" id="Oca-0w-IEu"/>
+                        <segue destination="mse-z6-5JB" kind="presentation" identifier="roomDisplay" id="hyB-6R-S6i"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BYH-aL-Z63" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -380,6 +381,34 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nz7-iw-iHl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-794" y="-64"/>
+        </scene>
+        <!--Room Display View Controller-->
+        <scene sceneID="Eup-Xx-f9P">
+            <objects>
+                <tableViewController id="mse-z6-5JB" customClass="RoomDisplayViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Xcn-5w-TJV">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="VZH-Tx-sUC">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VZH-Tx-sUC" id="zy0-a8-jbp">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="mse-z6-5JB" id="Vah-B2-mp5"/>
+                            <outlet property="delegate" destination="mse-z6-5JB" id="rBT-pH-jVv"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IjM-pr-vOG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-158" y="1391"/>
         </scene>
         <!--Wishlist View Controller-->
         <scene sceneID="207-n4-oSq">
@@ -408,7 +437,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ieH-jr-yqx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-794" y="1363"/>
+            <point key="canvasLocation" x="-1435" y="1391"/>
         </scene>
         <!--Title View Controller-->
         <scene sceneID="eTV-bd-o3w">
