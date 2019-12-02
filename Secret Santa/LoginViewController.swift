@@ -42,7 +42,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func loginAction(_ sender: Any) {
-        resignFirstResponder()
+        self.view.endEditing(true)
         activityIndicatorView.isHidden = false
         if checkTextFields() {
 //            print("Email:\t"+emailTextField.text!+"\nPassword:\t"+passwordTextField.text!)

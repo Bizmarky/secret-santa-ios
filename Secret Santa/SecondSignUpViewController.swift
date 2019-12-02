@@ -45,7 +45,7 @@ class SecondSignUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func submitAction(_ sender: Any) {
-        resignFirstResponder()
+        self.view.endEditing(true)
         activityIndicatorView.isHidden = false
         if checkTextFields() {
             

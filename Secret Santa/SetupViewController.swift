@@ -183,6 +183,8 @@ class SetupViewController: UIViewController {
             return
         }
         
+        self.view.endEditing(true)
+
         if host {
             
             // Firebase check room id
@@ -246,22 +248,28 @@ class SetupViewController: UIViewController {
                         }
                         
                         for usr in dataGroup {
-                            
-                            let usrUID = usr.keys.first!
+                            var host = false
+                            var usrUID = usr.keys.first!
+                            if usrUID == "host" {
+                                host = true
+                                usrUID = usr[usrUID] as! String
+                            }
                             
                             db.collection("users").document(usrUID).getDocument { (document, err) in
                                 
                                 if let err = err {
                                     print(err)
                                 } else  if let _ = document, document!.exists {
-                                    let data = document!.data() as! [String:String]
+                                    let rawdata = document!.data()!
+                                    let data = rawdata["userdata"] as! [String:Any]
+                                    let personName = (data["first"] as! String) + " " + (data["last"] as! String)
                                     
-                                    let personName = data["first"]! + " " + data["last"]!
-                                    let personWishlist = usr[usrUID] as! [String]
-                                    
-                                    let person = Person(name: personName)
-                                    person.setWishList(list: personWishlist)
-                                    userGroup.append(person)
+                                    if !host {
+                                        let personWishlist = usr[usrUID] as! [String]
+                                        let person = Person(name: personName)
+                                        person.setWishList(list: personWishlist)
+                                        userGroup.append(person)
+                                    }
 
                                 } else {
                                     print(usrUID+" does not exist")
@@ -325,6 +333,7 @@ class SetupViewController: UIViewController {
             let controller = (segue.destination as! UINavigationController).viewControllers[0] as! ViewController
             controller.roomID = self.roomID
             controller.getRoomData()
+            controller.checkRoom()
         }
     }
     

@@ -32,10 +32,14 @@ class ViewController: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        listDownloadTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(getLists), userInfo: nil, repeats: false)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        listDownloadTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(getLists), userInfo: nil, repeats: false)
         
         setupMenuActionSheet()
         let tap = UITapGestureRecognizer(target: self, action: #selector(showGroups))
@@ -47,6 +51,8 @@ class ViewController: UIViewController {
     }
     
     func checkRoom() {
+        hostRoomList = []
+        joinRoomList = []
         db.collection("users").document(user.uid).getDocument { (document, err) in
             if let err = err {
                 print(err)
