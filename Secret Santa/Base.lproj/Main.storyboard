@@ -361,6 +361,7 @@
                         <segue destination="dEQ-rU-DHc" kind="presentation" identifier="logoutSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="45O-xH-XsU"/>
                         <segue destination="Dsa-vB-fLn" kind="presentation" identifier="homeToMain" modalPresentationStyle="fullScreen" modalTransitionStyle="coverVertical" id="Q0Y-d1-PDS"/>
                         <segue destination="ixc-kG-7kN" kind="presentation" identifier="roomDisplay" id="H4O-jL-QBG"/>
+                        <segue destination="6q8-uf-uGP" kind="show" id="Sgl-cl-qex"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BYH-aL-Z63" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -383,34 +384,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nz7-iw-iHl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-794" y="-64"/>
-        </scene>
-        <!--Table View Controller-->
-        <scene sceneID="Eup-Xx-f9P">
-            <objects>
-                <tableViewController id="mse-z6-5JB" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Xcn-5w-TJV">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell2" id="VZH-Tx-sUC">
-                                <rect key="frame" x="0.0" y="28" width="414" height="43.666667938232422"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VZH-Tx-sUC" id="zy0-a8-jbp">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="mse-z6-5JB" id="Vah-B2-mp5"/>
-                            <outlet property="delegate" destination="mse-z6-5JB" id="rBT-pH-jVv"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="IjM-pr-vOG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-158" y="1391"/>
         </scene>
         <!--Room Display View Controller-->
         <scene sceneID="WOB-xj-IEQ">
@@ -467,7 +440,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aDf-Tk-om4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="558" y="1391"/>
+            <point key="canvasLocation" x="-149" y="1391"/>
         </scene>
         <!--Wishlist View Controller-->
         <scene sceneID="207-n4-oSq">
@@ -497,6 +470,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ieH-jr-yqx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1435" y="1391"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Meg-cB-G0K">
+            <objects>
+                <viewController id="6q8-uf-uGP" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="urH-Dr-xDy">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="BXQ-V4-Ymm"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Usj-V7-0U4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ynp-4Y-oTl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-794" y="1391"/>
         </scene>
         <!--Title View Controller-->
         <scene sceneID="eTV-bd-o3w">

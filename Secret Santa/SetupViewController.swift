@@ -11,7 +11,7 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
-class SetupViewController: UIViewController {
+class SetupViewController: UIViewController, UITextFieldDelegate {
     
     var host: Bool!
     var join: Bool!
@@ -57,6 +57,8 @@ class SetupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
                 
+        groupIDField.delegate = self
+        
         setLogoutButton()
         
         submitButton.translatesAutoresizingMaskIntoConstraints = false
@@ -81,6 +83,11 @@ class SetupViewController: UIViewController {
         hideAll()
         checkRoom()
                 
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        buttonAction(self)
+        return true
     }
     
     func setLogoutButton() {
