@@ -13,11 +13,19 @@ class RoomDisplayViewController: UIViewController, UITableViewDataSource, UITabl
     
     @IBOutlet weak var roomTableView: UITableView!
     
+    @IBOutlet weak var cancelButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.roomTableView.delegate = self
         self.roomTableView.dataSource = self
+        
+        let presenter = (presentingViewController as! UINavigationController).viewControllers[0] as! ViewController
+        if presenter.roomID == "" {
+            self.isModalInPresentation = true
+            self.cancelButton.isHidden = true
+        }
     }
     
     @IBAction func cancelAction(_ sender: Any) {

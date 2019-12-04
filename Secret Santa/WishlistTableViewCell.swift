@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class wishlistTableViewCell: UITableViewCell, UITextFieldDelegate {
+class WishlistTableViewCell: UITableViewCell, UITextFieldDelegate {
     
     var textField: UITextField!
     

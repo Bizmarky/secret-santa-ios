@@ -19,3 +19,4 @@ var user: User!
 var hostRoomList: [String]!
 var joinRoomList: [String]!
 let defaults = UserDefaults.standard
+var userData: [String:String]!

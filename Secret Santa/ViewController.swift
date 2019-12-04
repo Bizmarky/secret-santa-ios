@@ -17,6 +17,9 @@ class ViewController: UIViewController {
     var roomHost: String!
     var listDownloadTimer: Timer!
     var activityTimer: Timer!
+    var errorDismiss: Bool!
+    var viewAppeared = false
+    var roomDataTimer: Timer!
     
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
@@ -32,6 +35,15 @@ class ViewController: UIViewController {
         }
     }
     
+    func setRoomDataTimer() {
+        roomDataTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { (timer) in
+            if self.viewAppeared {
+                self.roomDataTimer.invalidate()
+                self.getRoomData()
+            }
+        })
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         listDownloadTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(getLists), userInfo: nil, repeats: false)
@@ -40,19 +52,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
+        errorDismiss = false
         setupMenuActionSheet()
         let tap = UITapGestureRecognizer(target: self, action: #selector(showGroups))
         tap.numberOfTouchesRequired = 1
         tap.numberOfTapsRequired = 1
         self.navigationController?.navigationBar.addGestureRecognizer(tap)
-        
+        viewAppeared = true
 //        pairPeople()
     }
     
     func checkRoom() {
-        hostRoomList = []
-        joinRoomList = []
         db.collection("users").document(user.uid).getDocument { (document, err) in
             if let err = err {
                 print(err)
@@ -91,7 +101,7 @@ class ViewController: UIViewController {
             self.performSegue(withIdentifier: "homeToMain", sender: self)
         }))
         menuAlert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) in
-            // Present account settings
+            self.performSegue(withIdentifier: "settingsSegue", sender: self)
         }))
         menuAlert.addAction(UIAlertAction(title: "Logout", style: .destructive, handler: { (action) in
             self.logoutAction()
@@ -121,79 +131,103 @@ class ViewController: UIViewController {
     }
     
     func getRoomData() {
-        
+
         if roomID == "" {
             performSegue(withIdentifier: "roomDisplay", sender: self)
 //            let rd = RoomDisplayViewController()
 //            self.present(rd, animated: true, completion: nil)
-        }
-        db.collection("rooms").document(roomID).getDocument { (querySnapshot, err) in
-            if let err = err {
-                createAlert(view: self, title: "Error", message: err.localizedDescription)
-            } else {
-                let data = querySnapshot!.data()!
-                if data.count != 0 {
-                    for key in data.keys {
-                        if key != "locked" {
-                            let usrUID = key
-                            var usrList: Any!
-                            if usrUID == "host" {
-                                usrList = data[key] as! String
-                            } else {
-                                usrList = data[key] as! [String]
-                            }
-                            
-                            dataGroup.append([usrUID:usrList!])
-                        }
-                    }
-                    for usr in dataGroup {
-                        var host = false
-                        var usrUID = usr.keys.first!
-                        if usrUID == "host" {
-                            host = true
-                            usrUID = usr[usrUID] as! String
-                        }
-                        db.collection("users").document(usrUID).getDocument { (document, err) in
-                            
-                            if let err = err {
-                                print(err)
-                            } else  if let _ = document, document!.exists {
-                                let rawdata = document!.data()!
-                                let data = rawdata["userdata"] as! [String:Any]
-                                let personName = (data["first"] as! String) + " " + (data["last"] as! String)
-
-                                if host {
-                                    self.roomHost = personName
-                                } else {
-                                    let personWishlist = usr[usrUID] as! [String]
-                                    if usrUID == user.uid {
-                                        wishlist = personWishlist
+        } else {
+            db.collection("rooms").document(roomID).getDocument { (querySnapshot, err) in
+                if let err = err {
+                    createAlert(view: self, title: "Error", message: err.localizedDescription)
+                } else {
+                    if let data = querySnapshot?.data() {
+                        if data.count != 0 {
+                            for key in data.keys {
+                                if key != "locked" {
+                                    let usrUID = key
+                                    var usrList: Any!
+                                    if usrUID == "host" {
+                                        usrList = data[key] as! String
                                     } else {
-                                        let person = Person(name: personName)
-                                        person.setWishList(list: personWishlist)
-                                        userGroup.append(person)
+                                        usrList = data[key] as! [String]
+                                    }
+                                    
+                                    dataGroup.append([usrUID:usrList!])
+                                }
+                            }
+                            for usr in dataGroup {
+                                var host = false
+                                var usrUID = usr.keys.first!
+                                if usrUID == "host" {
+                                    host = true
+                                    usrUID = usr[usrUID] as! String
+                                }
+                                db.collection("users").document(usrUID).getDocument { (document, err) in
+                                    
+                                    if let err = err {
+                                        print(err)
+                                    } else  if let _ = document, document!.exists {
+                                        let rawdata = document!.data()!
+                                        let data = rawdata["userdata"] as! [String:Any]
+                                        let personName = (data["first"] as! String) + " " + (data["last"] as! String)
+
+                                        if host {
+                                            self.roomHost = personName
+                                        } else {
+                                            let personWishlist = usr[usrUID] as! [String]
+                                            if usrUID == user.uid {
+                                                wishlist = personWishlist
+                                            } else {
+                                                let person = Person(name: personName)
+                                                person.setWishList(list: personWishlist)
+                                                userGroup.append(person)
+                                            }
+                                        }
+
+                                    } else {
+                                        print(usrUID+" does not exist")
                                     }
                                 }
-
-                            } else {
-                                print(usrUID+" does not exist")
+                                
                             }
+
+                            self.navigationItem.title = self.roomID
+                            self.activityTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (timer) in
+                                if self.activityIndicatorView != nil {
+                                    self.activityTimer.invalidate()
+                                    self.activityIndicatorView.isHidden = true
+                                }
+                            })
+                            defaults.set(self.roomID, forKey: "currentRoom")
+                        }
+                    } else {
+                        var count = 0
+                        for room in hostRoomList {
+                            if room == self.roomID {
+                                hostRoomList.remove(at: count)
+                            }
+                            count += 1
                         }
                         
-                    }
-
-                    self.navigationItem.title = self.roomID
-                    self.activityTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (timer) in
-                        if self.activityIndicatorView != nil {
-                            self.activityTimer.invalidate()
-                            self.activityIndicatorView.isHidden = true
+                        count = 0
+                        for room in joinRoomList {
+                            if room == self.roomID {
+                                joinRoomList.remove(at: count)
+                            }
+                            count += 1
                         }
-                    })
-                    defaults.set(self.roomID, forKey: "currentRoom")
+                        if hostRoomList.count + joinRoomList.count == 0 {
+                            self.errorDismiss = true
+                            self.performSegue(withIdentifier: "homeToMain", sender: self)
+                        } else {
+                            self.performSegue(withIdentifier: "roomDisplay", sender: self)
+                        }
+                    }
                 }
             }
-        }
         
+        }
 
         
         // Get host
@@ -251,7 +285,7 @@ class ViewController: UIViewController {
             controller.roomID = self.roomID
         } else if segue.identifier == "homeToMain" {
             let controller = (segue.destination as! UINavigationController).viewControllers[0] as! SetupViewController
-            controller.fromHome = true
+            controller.fromHome = !errorDismiss
         }
     }
 

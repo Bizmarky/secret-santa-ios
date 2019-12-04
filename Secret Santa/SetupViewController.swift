@@ -126,6 +126,14 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
                 let dataRooms = data["rooms"] as! [String]
                 let hostRooms = data["host"] as! [String]
                 
+                if userData == nil {
+                    userData = [:]
+                }
+                
+                userData["first"] = (data["first"] as! String)
+                userData["last"] = (data["last"] as! String)
+                userData["email"] = (data["email"] as! String)
+                
                 if dataRooms.isEmpty && hostRooms.isEmpty {
                     self.showAll()
                     self.activityIndicatorView.isHidden = true
@@ -339,7 +347,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
         if segue.identifier == "mainToHome" {
             let controller = (segue.destination as! UINavigationController).viewControllers[0] as! ViewController
             controller.roomID = self.roomID
-            controller.getRoomData()
+            controller.setRoomDataTimer()
             controller.checkRoom()
         }
     }

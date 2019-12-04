@@ -20,7 +20,7 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! wishlistTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! WishlistTableViewCell
         cell.textField.delegate = self
         cell.textField.text = wishlist[indexPath.row]
         cell.textField.returnKeyType = .next
@@ -50,7 +50,7 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
         self.navigationItem.setLeftBarButton(UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem)), animated: true)
         self.navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(saveAndExit)), animated: true)
         
-        tableView.register(wishlistTableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(WishlistTableViewCell.self, forCellReuseIdentifier: "cell")
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
@@ -63,7 +63,7 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
             self.tableView.reloadData()
-            (self.tableView.cellForRow(at: IndexPath(row: wishlist.count-1, section: 0)) as! wishlistTableViewCell).textField.becomeFirstResponder()
+            (self.tableView.cellForRow(at: IndexPath(row: wishlist.count-1, section: 0)) as! WishlistTableViewCell).textField.becomeFirstResponder()
         }
     }
     
@@ -71,7 +71,7 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
         wishlist[textField.tag] = textField.text!
         
         if textField.tag < wishlist.count-1 {
-            (tableView.cellForRow(at: IndexPath(row: textField.tag+1, section: 0)) as! wishlistTableViewCell).textField.becomeFirstResponder()
+            (tableView.cellForRow(at: IndexPath(row: textField.tag+1, section: 0)) as! WishlistTableViewCell).textField.becomeFirstResponder()
         }
         if textField.tag == wishlist.count-1 {
             if textField.text != "" {
@@ -86,7 +86,7 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
         var tempList: [String] = []
         
         for c in 0..<tableView.numberOfRows(inSection: 0) {
-            let cell = tableView.cellForRow(at: IndexPath(row: c, section: 0)) as! wishlistTableViewCell
+            let cell = tableView.cellForRow(at: IndexPath(row: c, section: 0)) as! WishlistTableViewCell
             tempList.append(cell.getText())
         }
         

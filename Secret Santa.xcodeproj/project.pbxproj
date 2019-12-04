@@ -11,6 +11,7 @@
 		2C2A4A4123932DCD0007DA99 /* TitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A4A4023932DCD0007DA99 /* TitleViewController.swift */; };
 		2C2A4A43239332510007DA99 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A4A42239332510007DA99 /* SignUpViewController.swift */; };
 		2C2A4A45239333C60007DA99 /* SecondSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A4A44239333C60007DA99 /* SecondSignUpViewController.swift */; };
+		2C4B70CD239766E100D4CFCE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4B70CC239766E100D4CFCE /* SettingsViewController.swift */; };
 		2C7874C2239048DA00CCC4AF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7874C1239048DA00CCC4AF /* LoginViewController.swift */; };
 		2C7874C423904A0C00CCC4AF /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7874C323904A0C00CCC4AF /* SetupViewController.swift */; };
 		2CD47C7723939CF3003BD5FA /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD47C7623939CF3003BD5FA /* InitialViewController.swift */; };
@@ -33,6 +34,7 @@
 		2C2A4A4023932DCD0007DA99 /* TitleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleViewController.swift; sourceTree = "<group>"; };
 		2C2A4A42239332510007DA99 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		2C2A4A44239333C60007DA99 /* SecondSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondSignUpViewController.swift; sourceTree = "<group>"; };
+		2C4B70CC239766E100D4CFCE /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		2C7874C1239048DA00CCC4AF /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		2C7874C323904A0C00CCC4AF /* SetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupViewController.swift; sourceTree = "<group>"; };
 		2CD47C7623939CF3003BD5FA /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				2C2A4A4023932DCD0007DA99 /* TitleViewController.swift */,
 				2C7874C323904A0C00CCC4AF /* SetupViewController.swift */,
 				2CD47C7623939CF3003BD5FA /* InitialViewController.swift */,
+				2C4B70CC239766E100D4CFCE /* SettingsViewController.swift */,
 				2CFDB7EE238F6B5300F1689E /* Main.storyboard */,
 				2CFDB7F1238F6B5400F1689E /* Assets.xcassets */,
 				2CFDB7F3238F6B5400F1689E /* LaunchScreen.storyboard */,
@@ -259,6 +262,7 @@
 				2CE6A33423902C2600F55096 /* WishlistTableViewCell.swift in Sources */,
 				2CE6A3322390227200F55096 /* WishlistViewController.swift in Sources */,
 				2C7874C2239048DA00CCC4AF /* LoginViewController.swift in Sources */,
+				2C4B70CD239766E100D4CFCE /* SettingsViewController.swift in Sources */,
 				2CFDB7FD238F6CC100F1689E /* Person.swift in Sources */,
 				2CFDB7EB238F6B5300F1689E /* SceneDelegate.swift in Sources */,
 				2C7874C423904A0C00CCC4AF /* SetupViewController.swift in Sources */,
