@@ -122,14 +122,20 @@ class SettingsViewController: UITableViewController {
         currentPWField = pwAlert.textFields![0]
         currentPWField.placeholder = "Current Password"
         currentPWField.returnKeyType = .next
+        currentPWField.isSecureTextEntry = true
+        currentPWField.textContentType = .password
         pwAlert.addTextField()
         newPWField = pwAlert.textFields![1]
         newPWField.placeholder = "New Password"
         newPWField.returnKeyType = .next
+        newPWField.isSecureTextEntry = true
+        newPWField.textContentType = .password
         pwAlert.addTextField()
         confirmPWField = pwAlert.textFields![2]
         confirmPWField.placeholder = "Confirm New Password"
         confirmPWField.returnKeyType = .done
+        confirmPWField.isSecureTextEntry = true
+        confirmPWField.textContentType = .password
         pwAlert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
         pwAlert.addAction(UIAlertAction(title: "Change", style: .default, handler: { (action) in
             if self.currentPWField.text != "" && self.newPWField.text != "" && self.confirmPWField.text != "" {
@@ -218,9 +224,28 @@ class SettingsViewController: UITableViewController {
     
     @IBAction func deleteAction(_ sender: Any) {
         let deleteAlert = UIAlertController(title: "Are you sure?", message: "All groups you are currently hosting will be deleted as well", preferredStyle: .alert)
+        deleteAlert.addTextField()
+        deleteAlert.textFields![0].placeholder = "Enter Password"
+        deleteAlert.textFields![0].textContentType = .password
+        deleteAlert.textFields![0].isSecureTextEntry = true
         deleteAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         deleteAlert.addAction(UIAlertAction(title: "Delete Account", style: .destructive, handler: { (action) in
-            self.deleteAccount()
+            if deleteAlert.textFields![0].text! == "" {
+                createAlert(view: self, title: "Error", message: "Text field cannot be blank") { (complete) in
+                    self.present(deleteAlert, animated: true, completion: nil)
+                }
+            } else {
+                let credential = EmailAuthProvider.credential(withEmail: userData["email"]!, password: deleteAlert.textFields![0].text!)
+                user.reauthenticate(with: credential) { (resut, err) in
+                    if let err = err {
+                        createAlert(view: self, title: "Error", message: err.localizedDescription) { (complete) in
+                            self.present(deleteAlert, animated: true, completion: nil)
+                        }
+                    } else {
+                        self.deleteAccount()
+                    }
+                }
+            }
         }))
         self.present(deleteAlert, animated: true, completion: nil)
     }
@@ -232,9 +257,43 @@ class SettingsViewController: UITableViewController {
                 createAlert(view: self, title: "Error", message: err.localizedDescription)
             } else {
                 if let data = doc?.data() {
-                    if (data["host"] as! [String]).count != 0 {
-                        roomIDs = data["host"] as! [String]
+                    let userdata = data["userdata"] as! [String:Any]
+                    let hostdata = userdata["host"] as! [String]
+                    if hostdata.count != 0 {
+                        roomIDs = hostdata
                         // Delete rooms the user hosted and then delete user and the delete auth
+                        for room in roomIDs {
+                            db.collection("rooms").document(room).delete { (err) in
+                                if let err = err {
+                                    createAlert(view: self, title: "Error", message: err.localizedDescription)
+                                } else {
+                                    db.collection("users").document(user.uid).delete { (err) in
+                                        if let err = err {
+                                            createAlert(view: self, title: "Error", message: err.localizedDescription)
+                                        } else {
+                                            
+                                            Auth.auth().currentUser?.delete(completion: { (err) in
+                                                if let err = err {
+                                                    createAlert(view: self, title: "Error", message: err.localizedDescription)
+                                                } else {
+                                                    userData = [:]
+                                                    hostRoomList = []
+                                                    joinRoomList = []
+                                                    user = nil
+                                                    wishlist = []
+                                                    userGroup = []
+                                                    dataGroup = []
+                                                    defaults.removeObject(forKey: "currentRoom")
+                                                    createAlert(view: self, title: "Success", message: "Account successfully deleted") { (complete) in
+                                                        self.performSegue(withIdentifier: "deleteSegue", sender: self)
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 } else {
                     createAlert(view: self, title: "Error", message: "Please try again later")

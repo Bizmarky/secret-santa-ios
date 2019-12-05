@@ -38,7 +38,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         emailTextField.becomeFirstResponder()
         
         activityIndicatorView.isHidden = true
-        
+                
+    }
+    
+    @objc func deletedAccount() {
+        createAlert(view: self, title: "Success", message: "Account successfully deleted")
     }
     
     @IBAction func loginAction(_ sender: Any) {

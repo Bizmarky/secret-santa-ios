@@ -652,6 +652,7 @@
                     <connections>
                         <outlet property="emailButton" destination="Cgn-tJ-2Fu" id="VR4-1y-PBb"/>
                         <outlet property="nameButton" destination="nix-41-Qup" id="cF3-F0-LwG"/>
+                        <segue destination="dEQ-rU-DHc" kind="presentation" identifier="deleteSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="haB-Yv-h71"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dcu-Dg-ed7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -792,6 +793,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="Q0Y-d1-PDS"/>
-        <segue reference="45O-xH-XsU"/>
+        <segue reference="haB-Yv-h71"/>
     </inferredMetricsTieBreakers>
 </document>

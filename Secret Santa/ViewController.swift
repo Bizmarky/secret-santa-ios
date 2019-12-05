@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     var errorDismiss: Bool!
     var viewAppeared = false
     var roomDataTimer: Timer!
+    var delete = false
     
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
@@ -63,6 +64,8 @@ class ViewController: UIViewController {
     }
     
     func checkRoom() {
+        hostRoomList = []
+        joinRoomList = []
         db.collection("users").document(user.uid).getDocument { (document, err) in
             if let err = err {
                 print(err)
@@ -111,23 +114,27 @@ class ViewController: UIViewController {
     }
     
     func logoutAction() {
-        let alert = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action) in
-            
-            self.activityIndicatorView.isHidden = false
+        if !delete {
+            let alert = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action) in
+                
+                self.activityIndicatorView.isHidden = false
 
-            let firebaseAuth = Auth.auth()
-            
-            do {
-                try firebaseAuth.signOut()
-                user = nil
-                self.performSegue(withIdentifier: "logoutSegue", sender: self)
-            } catch let signOutError as NSError {
-                createAlert(view: self, title: "Error", message: signOutError.localizedDescription)
-            }
-        }))
-        self.present(alert, animated: true, completion: nil)
+                let firebaseAuth = Auth.auth()
+                
+                do {
+                    try firebaseAuth.signOut()
+                    user = nil
+                    self.performSegue(withIdentifier: "logoutSegue", sender: self)
+                } catch let signOutError as NSError {
+                    createAlert(view: self, title: "Error", message: signOutError.localizedDescription)
+                }
+            }))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            self.performSegue(withIdentifier: "logoutSegue", sender: self)
+        }
     }
     
     func getRoomData() {
