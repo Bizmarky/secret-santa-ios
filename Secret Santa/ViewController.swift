@@ -55,10 +55,15 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         errorDismiss = false
         setupMenuActionSheet()
+        let bar = self.navigationController?.navigationBar
+        let tapView = UIView(frame: CGRect(x: (bar?.center.x)!-50, y: (bar?.center.y)!-20, width: 100, height: 40))
+        tapView.backgroundColor = .clear
         let tap = UITapGestureRecognizer(target: self, action: #selector(showGroups))
         tap.numberOfTouchesRequired = 1
         tap.numberOfTapsRequired = 1
-        self.navigationController?.navigationBar.addGestureRecognizer(tap)
+        self.navigationController?.navigationBar.addSubview(tapView)
+        tapView.addGestureRecognizer(tap)
+        
         viewAppeared = true
 //        pairPeople()
     }

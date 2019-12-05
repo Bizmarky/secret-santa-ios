@@ -10,24 +10,55 @@ import Foundation
 import UIKit
 import FirebaseFirestore
 import FirebaseAuth
+import FSCalendar
 
-class SetupViewController: UIViewController, UITextFieldDelegate {
+class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDelegate, FSCalendarDataSource, UIDocumentPickerDelegate {
     
     var host: Bool!
     var join: Bool!
     var titleText: UILabel!
     var roomID: String!
     var fromHome = false
+    var code: String!
+    var chosenDate: Date!
     
     @IBOutlet weak var userTypeControl: UISegmentedControl!
     
+    @IBOutlet weak var groupNameField: UITextField!
+    
     @IBOutlet weak var groupIDField: UITextField!
+    
+    @IBOutlet weak var dateField: UITextField!
     
     @IBOutlet weak var submitButton: UIButton!
     
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
     @IBOutlet weak var logoutButton: UIButton!
+    
+    // -148 to -78
+    @IBOutlet weak var submitConstraint: NSLayoutConstraint!
+    
+    // 58 to 0
+    @IBOutlet weak var groupIDConstraint: NSLayoutConstraint!
+    
+    // 58 to 0
+    @IBOutlet weak var dateConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var calendarView: FSCalendar!
+    
+    @IBOutlet weak var overlay: UIView!
+    
+    // 24 to 620
+    @IBOutlet weak var dateViewConstraintTop: NSLayoutConstraint!
+    
+    @IBOutlet weak var dateLabel: UILabel!
+    
+    @IBOutlet weak var dateView: UIView!
+    
+    @IBOutlet weak var datePicker: UIDatePicker!
+    
+    @IBOutlet weak var timeLabel: UILabel!
     
     @IBAction func logoutAction(_ sender: Any) {
         if fromHome {
@@ -53,11 +84,76 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         
+        updateDate()
+           
+       }
+    
+    @IBAction func dateDoneAction(_ sender: Any) {
+        
+        hideCalendar()
+        
+    }
+    
+    func updateDate() {
+        let timeComponents = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
+        let hour = timeComponents.hour!
+        let minute = timeComponents.minute!
+        
+        let dayComponents = Calendar.current.dateComponents([.day, .month, .year], from: calendarView.selectedDate!)
+        let day = dayComponents.day!
+        let month = dayComponents.month!
+        let year = dayComponents.year!
+        
+        var finalComponents = DateComponents()
+        finalComponents.day = day
+        finalComponents.month = month
+        finalComponents.year = year
+        finalComponents.hour = hour
+        finalComponents.minute = minute
+        
+        let calender = Calendar.current
+        chosenDate = calender.date(from: finalComponents)
+        calendarView.select(chosenDate)
+        datePicker.setDate(chosenDate, animated: true)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d, yyyy h:mm a"
+        dateField.text = formatter.string(from: chosenDate)
+        formatter.dateFormat = "MMM d, yyyy"
+        dateLabel.text = formatter.string(from: chosenDate)
+        formatter.dateFormat = "h:mm a"
+        timeLabel.text = formatter.string(from: chosenDate)
+        
+    }
+    
+    @IBAction func datePickerAction(_ sender: Any) {
+        updateDate()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        datePicker.minimumDate = Date()
+        datePicker.minuteInterval = 5
+        datePicker.setDate(Date(), animated: false)
+        chosenDate = datePicker.date
+        calendarView.select(chosenDate)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d, yyyy"
+        dateLabel.text = formatter.string(from: chosenDate)
+        formatter.dateFormat = "h:mm a"
+        timeLabel.text = formatter.string(from: chosenDate)
+        
+        self.dateViewConstraintTop.constant = 620
+        self.dateView.layer.cornerRadius = 12
+        overlay.alpha = 0
+        overlay.isHidden = true
+        
+        self.setupToHideKeyboardOnTapOnView()
+        
+        groupNameField.delegate = self
         groupIDField.delegate = self
+        dateField.delegate = self
         
         setLogoutButton()
         
@@ -83,10 +179,61 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
         hideAll()
         checkRoom()
                 
+        code = ""
+        
+        let tap2 = UITapGestureRecognizer()
+        tap2.addTarget(self, action: #selector(hideCalendar))
+        tap2.numberOfTouchesRequired = 1
+        tap2.numberOfTapsRequired = 1
+        overlay.addGestureRecognizer(tap2)
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if textField.isEqual(groupNameField) {
+            let codeText = groupNameField.text!
+            code = codeText.replacingOccurrences(of: " ", with: "-")
+            self.groupIDField.placeholder = "Invite Code: " + code
+        }
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField.isEqual(dateField) {
+            textField.resignFirstResponder()
+            showCalendar()
+            return false
+        }
+        return true
+    }
+    
+    func showCalendar() {
+        overlay.isHidden = false
+        self.dateViewConstraintTop.constant = 24
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+            self.overlay.alpha = 0.5
+        }
+    }
+    
+    @objc func hideCalendar() {
+        self.dateViewConstraintTop.constant = 620
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.layoutIfNeeded()
+            self.overlay.alpha = 0
+        }) { (complete) in
+            self.overlay.isHidden = true
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        buttonAction(self)
+        if host {
+            if textField.isEqual(groupNameField) {
+                textField.resignFirstResponder()
+                self.showCalendar()
+                return false
+            }
+        } else if join {
+            buttonAction(self)
+        }
         return true
     }
     
@@ -102,6 +249,8 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
         groupIDField.alpha = 0
         submitButton.alpha = 0
         titleText.alpha = 0
+        groupNameField.alpha = 0
+        dateField.alpha = 0
     }
     
     func showAll() {
@@ -111,6 +260,8 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
             self.groupIDField.alpha = 1
             self.submitButton.alpha = 1
             self.titleText.alpha = 1
+            self.groupNameField.alpha = 1
+            self.dateField.alpha = 1
         }
     }
     
@@ -206,13 +357,13 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
             // Firebase create room id
             // Firebase join room with uid as key and wishlist as children
             
-            db.collection("rooms").document(groupIDField.text!).getDocument(completion: { (querySnapshot, err) in
+            db.collection("rooms").document(code).getDocument(completion: { (querySnapshot, err) in
                 if let err = err {
                     self.activityIndicatorView.isHidden = true
                     createAlert(view: self, title: "Error", message: err.localizedDescription)
                 } else {
                     if !querySnapshot!.exists {
-                        db.collection("rooms").document(self.groupIDField.text!).setData([user.uid:[], "locked":false, "host":user.uid]) { err in
+                        db.collection("rooms").document(self.code).setData([user.uid:[], "locked":false, "host":user.uid, "name":self.groupNameField.text!, "date":self.chosenDate.timeIntervalSince1970]) { err in
                             if let err = err {
                                 self.activityIndicatorView.isHidden = true
                                 createAlert(view: self, title: "Error", message: err.localizedDescription)
@@ -255,7 +406,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
                         for key in data.keys {
                             if key != "locked" && key != user.uid {
                                 let usrUID = key
-                                if usrUID != "host" {
+                                if usrUID != "host" || usrUID != "name" || usrUID != "date" {
                                     let usrList = data[key] as! [String]
                                     dataGroup.append([usrUID:usrList])
                                 }
@@ -264,10 +415,18 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
                         
                         for usr in dataGroup {
                             var host = false
+                            var name = false
+                            var date = false
                             var usrUID = usr.keys.first!
                             if usrUID == "host" {
                                 host = true
                                 usrUID = usr[usrUID] as! String
+                            } else if usrUID == "name" {
+                                host = true
+                                usrUID = usr[usrUID] as! String
+                            } else if usrUID == "ate" {
+                                host = true
+                                usrUID = String(usr[usrUID] as! TimeInterval)
                             }
                             
                             db.collection("users").document(usrUID).getDocument { (document, err) in
@@ -320,6 +479,20 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
     }
     
     func setupHost() {
+        let codeText = groupNameField.text!
+        code = codeText.replacingOccurrences(of: " ", with: "-")
+        self.groupIDField.text = ""
+        self.groupIDField.placeholder = "Invite Code: " + code
+        self.groupIDConstraint.constant = 58
+        self.dateConstraint.constant = 58
+        self.submitConstraint.constant = -148
+        UIView.animate(withDuration: 0.3, animations: {
+            self.groupNameField.alpha = 1
+            self.dateField.alpha = 1
+            self.view.layoutIfNeeded()
+        }) { (complete) in
+            print("Setup Host Constraints")
+        }
         self.titleText.text = "Host"
         self.submitButton.setTitle("Create", for: .normal)
         host = true
@@ -327,9 +500,22 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
         userTypeControl.tintColor = UIColor.blue
         userTypeControl.selectedSegmentTintColor = UIColor.blue
         submitButton.backgroundColor = .blue
+        groupIDField.isUserInteractionEnabled = false
     }
     
     func setupJoin() {
+        self.groupIDField.text = ""
+        self.groupIDField.placeholder = "Enter Invite Code"
+        self.groupIDConstraint.constant = 0
+        self.dateConstraint.constant = 0
+        self.submitConstraint.constant = -78
+        UIView.animate(withDuration: 0.3, animations: {
+            self.groupNameField.alpha = 0
+            self.dateField.alpha = 0
+            self.view.layoutIfNeeded()
+        }) { (complete) in
+            print("Setup Join Constraints")
+        }
         self.titleText.text = "Join"
         host = false
         join = true
@@ -337,10 +523,15 @@ class SetupViewController: UIViewController, UITextFieldDelegate {
         userTypeControl.selectedSegmentTintColor = UIColor.red
         submitButton.backgroundColor = .red
         self.submitButton.setTitle("Join", for: .normal)
+        groupIDField.isUserInteractionEnabled = true
     }
     
     func checkTextFields() -> Bool {
-        return groupIDField.text != ""
+        if host {
+            return groupNameField.text != "" && dateField.text != ""
+        } else {
+            return groupIDField.text != ""
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -368,4 +559,22 @@ func createAlert(view: UIViewController, title: String?, message: String?, compl
     }
     alert.addAction(action)
     view.present(alert, animated: true, completion: nil)
+}
+
+extension UIViewController
+{
+    func setupToHideKeyboardOnTapOnView()
+    {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(UIViewController.dismissKeyboard))
+
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc func dismissKeyboard()
+    {
+        view.endEditing(true)
+    }
 }
