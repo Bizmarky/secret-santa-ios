@@ -140,11 +140,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        chosenDate = Date().ceil(precision: 5*60)
-        let formatter2 = DateFormatter()
-        formatter2.dateFormat = "MMM d, yyyy h:mm a"
-        print(formatter2.string(from: chosenDate))
-        
+        chosenDate = Date().ceil(precision: 5*60)        
         datePicker.minimumDate = chosenDate
         datePicker.minuteInterval = 5
         datePicker.setDate(chosenDate, animated: false)
