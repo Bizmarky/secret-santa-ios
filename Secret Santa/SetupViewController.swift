@@ -198,8 +198,22 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         overlay.addGestureRecognizer(tap2)
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField.isEqual(groupNameField) {
+            let currentCharacterCount = textField.text?.count ?? 0
+            if range.length + range.location > currentCharacterCount {
+                return false
+            }
+            let newLength = currentCharacterCount + string.count - range.length
+            return newLength < 14
+        } else {
+            return true
+        }
+    }
+    
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField.isEqual(groupNameField) {
+            // max characters 22
             let codeText = groupNameField.text!
             code = codeText.replacingOccurrences(of: " ", with: "-").lowercased()
             self.groupIDField.placeholder = "Invite Code: " + code

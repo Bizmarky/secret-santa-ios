@@ -24,6 +24,7 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
         cell.textField.delegate = self
         cell.textField.text = wishlist[indexPath.row]
         cell.textField.returnKeyType = .next
+        cell.textField.autocapitalizationType = .words
         cell.textField.tag = indexPath.row
         cell.isUserInteractionEnabled = true
         cell.tag = indexPath.row
