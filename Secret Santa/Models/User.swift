@@ -18,5 +18,6 @@ var dataGroup: [[String:Any]]!
 var user: User!
 var hostRoomList: [String]!
 var joinRoomList: [String]!
+var roomNameMap: [String:String]!
 let defaults = UserDefaults.standard
 var userData: [String:String]!

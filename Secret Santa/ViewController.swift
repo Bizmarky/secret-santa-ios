@@ -14,6 +14,8 @@ class ViewController: UIViewController {
     var isHost: Bool!
     let menuAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     var roomID: String!
+    var roomName: String!
+    var roomDate: Date!
     var roomHost: String!
     var listDownloadTimer: Timer!
     var activityTimer: Timer!
@@ -71,6 +73,7 @@ class ViewController: UIViewController {
     func checkRoom() {
         hostRoomList = []
         joinRoomList = []
+        roomNameMap = [:]
         db.collection("users").document(user.uid).getDocument { (document, err) in
             if let err = err {
                 print(err)
@@ -80,12 +83,32 @@ class ViewController: UIViewController {
                 let dataRooms = data["rooms"] as! [String]
                 let hostRooms = data["host"] as! [String]
                 
-                for room in hostRooms {
+                for roomID in hostRooms {
+                    let room = roomID.lowercased()
                     hostRoomList.append(room)
+                    db.collection("rooms").document(room).getDocument { (doc, err) in
+                        if let err = err {
+                            print(err)
+                        } else {
+                            let data = doc?.data()!
+                            let name = data!["name"] as! String
+                            roomNameMap[room] = name
+                        }
+                    }
                 }
-                for room in dataRooms {
+                for roomID in dataRooms {
+                    let room = roomID.lowercased()
                     if !hostRoomList.contains(room) {
                         joinRoomList.append(room)
+                        db.collection("rooms").document(room).getDocument { (doc, err) in
+                            if let err = err {
+                                print(err)
+                            } else {
+                                let data = doc?.data()!
+                                let name = data!["name"] as! String
+                                roomNameMap[room] = name
+                            }
+                        }
                     }
                 }
             }
@@ -159,8 +182,10 @@ class ViewController: UIViewController {
                                 if key != "locked" {
                                     let usrUID = key
                                     var usrList: Any!
-                                    if usrUID == "host" {
+                                    if usrUID == "host" || usrUID == "name" {
                                         usrList = data[key] as! String
+                                    } else if usrUID == "date" {
+                                        usrList = data[key] as! TimeInterval
                                     } else {
                                         usrList = data[key] as! [String]
                                     }
@@ -170,10 +195,18 @@ class ViewController: UIViewController {
                             }
                             for usr in dataGroup {
                                 var host = false
+                                var name = false
+                                var date = false
                                 var usrUID = usr.keys.first!
                                 if usrUID == "host" {
                                     host = true
                                     usrUID = usr[usrUID] as! String
+                                } else if usrUID == "name" {
+                                    name = true
+                                    self.roomName = (usr[usrUID] as! String)
+                                } else if usrUID == "date" {
+                                    date = true
+                                    self.roomDate = Date(timeIntervalSince1970: usr[usrUID] as! TimeInterval)
                                 }
                                 db.collection("users").document(usrUID).getDocument { (document, err) in
                                     
@@ -196,15 +229,19 @@ class ViewController: UIViewController {
                                                 userGroup.append(person)
                                             }
                                         }
-
-                                    } else {
+                                    } else if !name && !date {
                                         print(usrUID+" does not exist")
                                     }
                                 }
                                 
                             }
 
-                            self.navigationItem.title = self.roomID
+                            self.navigationItem.title = self.roomName
+                            print("ID: "+self.roomID)
+                            print("Name: "+self.roomName)
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "MMM d, yyyy h:mm a"
+                            print("Date: "+formatter.string(from: self.roomDate))
                             self.activityTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (timer) in
                                 if self.activityIndicatorView != nil {
                                     self.activityTimer.invalidate()

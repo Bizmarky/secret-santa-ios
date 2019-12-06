@@ -279,6 +279,7 @@ class SettingsViewController: UITableViewController {
                                                     userData = [:]
                                                     hostRoomList = []
                                                     joinRoomList = []
+                                                    roomNameMap = [:]
                                                     user = nil
                                                     wishlist = []
                                                     userGroup = []

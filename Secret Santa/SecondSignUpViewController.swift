@@ -59,8 +59,8 @@ class SecondSignUpViewController: UIViewController, UITextFieldDelegate {
                 } else {
                     user = authResult!.user
                     Firestore.firestore().collection("users").document(user.uid).setData(["userdata":[
-                        "first":self.firstName,
-                        "last":self.lastName,
+                        "first":self.firstName!,
+                        "last":self.lastName!,
                         "email":self.emailField.text!,
                         "rooms":[],
                         "host":[]

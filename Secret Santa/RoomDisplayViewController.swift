@@ -96,12 +96,12 @@ class RoomDisplayViewController: UIViewController, UITableViewDataSource, UITabl
         
         if indexPath.section == 0 {
             if !hostRoomList.isEmpty {
-                cell.textLabel?.text = hostRoomList[indexPath.row]
+                cell.textLabel?.text = roomNameMap[hostRoomList[indexPath.row]]
             } else if !joinRoomList.isEmpty {
-                cell.textLabel?.text = joinRoomList[indexPath.row]
+                cell.textLabel?.text = roomNameMap[joinRoomList[indexPath.row]]
             }
         } else {
-            cell.textLabel?.text = joinRoomList[indexPath.row]
+            cell.textLabel?.text = roomNameMap[joinRoomList[indexPath.row]]
         }
     
         cell.textLabel?.font = .boldSystemFont(ofSize: 16)
@@ -110,7 +110,17 @@ class RoomDisplayViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectRoom(ID: (tableView.cellForRow(at: indexPath)?.textLabel?.text)!)
+        var ID = ""
+        if indexPath.section == 0 {
+            if !hostRoomList.isEmpty {
+                ID = hostRoomList[indexPath.row]
+            } else if !joinRoomList.isEmpty {
+                ID = joinRoomList[indexPath.row]
+            }
+        } else {
+            ID = joinRoomList[indexPath.row]
+        }
+        selectRoom(ID: ID)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     

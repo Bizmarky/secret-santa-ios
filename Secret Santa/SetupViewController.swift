@@ -18,6 +18,8 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     var join: Bool!
     var titleText: UILabel!
     var roomID: String!
+    var roomName: String!
+    var roomDate: Date!
     var fromHome = false
     var code: String!
     var chosenDate: Date!
@@ -36,13 +38,13 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     
     @IBOutlet weak var logoutButton: UIButton!
     
-    // -148 to -78
+    // -156 to -86
     @IBOutlet weak var submitConstraint: NSLayoutConstraint!
     
-    // 58 to 0
+    // 66 to 0
     @IBOutlet weak var groupIDConstraint: NSLayoutConstraint!
     
-    // 58 to 0
+    // 66 to 0
     @IBOutlet weak var dateConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var calendarView: FSCalendar!
@@ -133,10 +135,15 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        datePicker.minimumDate = Date()
+        
+        chosenDate = Date().ceil(precision: 5*60)
+        let formatter2 = DateFormatter()
+        formatter2.dateFormat = "MMM d, yyyy h:mm a"
+        print(formatter2.string(from: chosenDate))
+        
+        datePicker.minimumDate = chosenDate
         datePicker.minuteInterval = 5
-        datePicker.setDate(Date(), animated: false)
-        chosenDate = datePicker.date
+        datePicker.setDate(chosenDate, animated: false)
         calendarView.select(chosenDate)
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, yyyy"
@@ -175,6 +182,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         
         hostRoomList = []
         joinRoomList = []
+        roomNameMap = [:]
         
         hideAll()
         checkRoom()
@@ -191,7 +199,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField.isEqual(groupNameField) {
             let codeText = groupNameField.text!
-            code = codeText.replacingOccurrences(of: " ", with: "-")
+            code = codeText.replacingOccurrences(of: " ", with: "-").lowercased()
             self.groupIDField.placeholder = "Invite Code: " + code
         }
     }
@@ -206,6 +214,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     }
     
     func showCalendar() {
+        self.view.endEditing(true)
         overlay.isHidden = false
         self.dateViewConstraintTop.constant = 24
         UIView.animate(withDuration: 0.3) {
@@ -289,12 +298,32 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
                     self.showAll()
                     self.activityIndicatorView.isHidden = true
                 } else {
-                    for room in hostRooms {
+                    for roomID in hostRooms {
+                        let room = roomID.lowercased()
                         hostRoomList.append(room)
+                        db.collection("rooms").document(room).getDocument { (doc, err) in
+                            if let err = err {
+                                print(err)
+                            } else {
+                                let data = doc?.data()!
+                                let name = data!["name"] as! String
+                                roomNameMap[room] = name
+                            }
+                        }
                     }
-                    for room in dataRooms {
+                    for roomID in dataRooms {
+                        let room = roomID.lowercased()
                         if !hostRoomList.contains(room) {
                             joinRoomList.append(room)
+                            db.collection("rooms").document(room).getDocument { (doc, err) in
+                                if let err = err {
+                                    print(err)
+                                } else {
+                                    let data = doc?.data()!
+                                    let name = data!["name"] as! String
+                                    roomNameMap[room] = name
+                                }
+                            }
                         }
                     }
                     if !self.fromHome {
@@ -343,9 +372,9 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
             return
         }
         
-        if joinRoomList.contains(groupIDField.text!) || hostRoomList.contains(groupIDField.text!) {
+        if joinRoomList.contains(code) || hostRoomList.contains(code) {
             activityIndicatorView.isHidden = true
-            createAlert(view: self, title: "Error", message: "You are already in the group \""+self.groupIDField.text!+"\"")
+            createAlert(view: self, title: "Error", message: "You are already in the group \""+self.code+"\"")
             return
         }
         
@@ -368,17 +397,18 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
                                 self.activityIndicatorView.isHidden = true
                                 createAlert(view: self, title: "Error", message: err.localizedDescription)
                             } else {
-                                db.collection("users").document(user.uid).updateData(["userdata.host": FieldValue.arrayUnion([self.groupIDField.text!])]) { (err) in
+                                db.collection("users").document(user.uid).updateData(["userdata.host" : FieldValue.arrayUnion([self.code!])], completion: { (err) in
                                     if let err = err {
                                         self.activityIndicatorView.isHidden = true
                                         createAlert(view: self, title: "Error", message: err.localizedDescription)
                                     } else {
                                         // Segue to home
-                                        self.roomID = self.groupIDField.text!
+                                        self.roomID = self.code!
+                                        self.roomName = self.groupNameField.text!
+                                        self.roomDate = self.chosenDate
                                         self.performSegue(withIdentifier: "mainToHome", sender: self)
                                     }
-                                }
-                                
+                                })
                             }
                         }
                     }
@@ -395,8 +425,9 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
             
             // Firebase check if room exists
             // Firebase download people data
-            
-            db.collection("rooms").document(groupIDField.text!).getDocument(completion: { (querySnapshot, err) in
+            var eventName = ""
+            var eventDate: Date!
+            db.collection("rooms").document(self.groupIDField.text!.lowercased()).getDocument(completion: { (querySnapshot, err) in
                 if let err = err {
                     self.activityIndicatorView.isHidden = true
                     createAlert(view: self, title: "Error", message: err.localizedDescription)
@@ -406,7 +437,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
                         for key in data.keys {
                             if key != "locked" && key != user.uid {
                                 let usrUID = key
-                                if usrUID != "host" || usrUID != "name" || usrUID != "date" {
+                                if usrUID != "host" && usrUID != "name" && usrUID != "date" {
                                     let usrList = data[key] as! [String]
                                     dataGroup.append([usrUID:usrList])
                                 }
@@ -422,11 +453,11 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
                                 host = true
                                 usrUID = usr[usrUID] as! String
                             } else if usrUID == "name" {
-                                host = true
-                                usrUID = usr[usrUID] as! String
-                            } else if usrUID == "ate" {
-                                host = true
-                                usrUID = String(usr[usrUID] as! TimeInterval)
+                                name = true
+                                eventName = usr[usrUID] as! String
+                            } else if usrUID == "date" {
+                                date = true
+                                eventDate = Date(timeIntervalSince1970: usr[usrUID] as! TimeInterval)
                             }
                             
                             db.collection("users").document(usrUID).getDocument { (document, err) in
@@ -434,15 +465,17 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
                                 if let err = err {
                                     print(err)
                                 } else  if let _ = document, document!.exists {
-                                    let rawdata = document!.data()!
-                                    let data = rawdata["userdata"] as! [String:Any]
-                                    let personName = (data["first"] as! String) + " " + (data["last"] as! String)
-                                    
-                                    if !host {
-                                        let personWishlist = usr[usrUID] as! [String]
-                                        let person = Person(name: personName)
-                                        person.setWishList(list: personWishlist)
-                                        userGroup.append(person)
+                                    if !name && !date {
+                                        let rawdata = document!.data()!
+                                        let data = rawdata["userdata"] as! [String:Any]
+                                        let personName = (data["first"] as! String) + " " + (data["last"] as! String)
+                                        
+                                        if !host {
+                                            let personWishlist = usr[usrUID] as! [String]
+                                            let person = Person(name: personName)
+                                            person.setWishList(list: personWishlist)
+                                            userGroup.append(person)
+                                        }
                                     }
 
                                 } else {
@@ -451,22 +484,24 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
                             }
                         }
                         
-                        db.collection("rooms").document(self.groupIDField.text!).updateData([user.uid:[]]) { err in
-                                if let err = err {
-                                    self.activityIndicatorView.isHidden = true
-                                    createAlert(view: self, title: "Error", message: err.localizedDescription)
-                                } else {
-                                    db.collection("users").document(user.uid).updateData(["userdata.rooms" : FieldValue.arrayUnion([self.groupIDField.text!])]) { (err) in
-                                        if let err = err {
-                                            self.activityIndicatorView.isHidden = true
-                                            createAlert(view: self, title: "Error", message: err.localizedDescription)
-                                        } else {
-                                            // Segue to home
-                                            self.roomID = self.groupIDField.text!
-                                            self.performSegue(withIdentifier: "mainToHome", sender: self)
-                                        }
+                        self.roomName = eventName
+                        self.roomDate = eventDate
+                        db.collection("rooms").document(self.groupIDField.text!.lowercased()).updateData([user.uid:[]]) { err in
+                            if let err = err {
+                                self.activityIndicatorView.isHidden = true
+                                createAlert(view: self, title: "Error", message: err.localizedDescription)
+                            } else {
+                                db.collection("users").document(user.uid).updateData(["userdata.rooms" : FieldValue.arrayUnion([self.groupIDField.text!.lowercased()])]) { (err) in
+                                    if let err = err {
+                                        self.activityIndicatorView.isHidden = true
+                                        createAlert(view: self, title: "Error", message: err.localizedDescription)
+                                    } else {
+                                        // Segue to home
+                                        self.roomID = self.groupIDField.text!.lowercased()
+                                        self.performSegue(withIdentifier: "mainToHome", sender: self)
                                     }
                                 }
+                            }
                         }
                     } else {
                         self.activityIndicatorView.isHidden = true
@@ -485,7 +520,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         self.groupIDField.placeholder = "Invite Code: " + code
         self.groupIDConstraint.constant = 58
         self.dateConstraint.constant = 58
-        self.submitConstraint.constant = -148
+        self.submitConstraint.constant = -164
         UIView.animate(withDuration: 0.3, animations: {
             self.groupNameField.alpha = 1
             self.dateField.alpha = 1
@@ -508,7 +543,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         self.groupIDField.placeholder = "Enter Invite Code"
         self.groupIDConstraint.constant = 0
         self.dateConstraint.constant = 0
-        self.submitConstraint.constant = -78
+        self.submitConstraint.constant = -94
         UIView.animate(withDuration: 0.3, animations: {
             self.groupNameField.alpha = 0
             self.dateField.alpha = 0
@@ -538,6 +573,8 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         if segue.identifier == "mainToHome" {
             let controller = (segue.destination as! UINavigationController).viewControllers[0] as! ViewController
             controller.roomID = self.roomID
+            controller.roomName = self.roomName
+            controller.roomDate = self.roomDate
             controller.setRoomDataTimer()
             controller.checkRoom()
         }
@@ -576,5 +613,25 @@ extension UIViewController
     @objc func dismissKeyboard()
     {
         view.endEditing(true)
+    }
+}
+
+extension Date {
+
+    public func round(precision: TimeInterval) -> Date {
+        return round(precision: precision, rule: .toNearestOrAwayFromZero)
+    }
+
+    public func ceil(precision: TimeInterval) -> Date {
+        return round(precision: precision, rule: .up)
+    }
+
+    public func floor(precision: TimeInterval) -> Date {
+        return round(precision: precision, rule: .down)
+    }
+
+    private func round(precision: TimeInterval, rule: FloatingPointRoundingRule) -> Date {
+        let seconds = (self.timeIntervalSinceReferenceDate / precision).rounded(rule) *  precision;
+        return Date(timeIntervalSinceReferenceDate: seconds)
     }
 }
