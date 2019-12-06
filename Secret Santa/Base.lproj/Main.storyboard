@@ -218,7 +218,7 @@
             </objects>
             <point key="canvasLocation" x="-794" y="-1461"/>
         </scene>
-        <!--Data Source-->
+        <!--Setup View Controller-->
         <scene sceneID="OrM-yA-bvg">
             <objects>
                 <viewController title="Setup View Controller" id="8Vp-RC-4sT" customClass="SetupViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
@@ -292,10 +292,6 @@
                                                 <color key="value" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <outlet property="dataSource" destination="8Vp-RC-4sT" id="ns2-8g-cip"/>
-                                            <outlet property="delegate" destination="8Vp-RC-4sT" id="IWG-E3-EJS"/>
-                                        </connections>
                                     </view>
                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="OrX-uV-TW2">
                                         <rect key="frame" x="0.0" y="305" width="318" height="216"/>

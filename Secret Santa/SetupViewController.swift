@@ -133,6 +133,10 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         updateDate()
     }
     
+    func minimumDate(for calendar: FSCalendar) -> Date {
+        return chosenDate
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -144,6 +148,8 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         datePicker.minimumDate = chosenDate
         datePicker.minuteInterval = 5
         datePicker.setDate(chosenDate, animated: false)
+        calendarView.delegate = self
+        calendarView.dataSource = self
         calendarView.select(chosenDate)
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, yyyy"
