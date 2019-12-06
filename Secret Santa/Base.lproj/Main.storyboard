@@ -872,20 +872,33 @@
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yh6-yI-KMY">
+                                <rect key="frame" x="80" y="298" width="254" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="24" id="r4k-9s-yqa"/>
+                                </constraints>
+                                <state key="normal" title="Forgot Password"/>
+                                <connections>
+                                    <action selector="passwordAction:" destination="7eX-26-67L" eventType="touchUpInside" id="tAZ-KA-5Oi"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="MBU-p9-Ewg" firstAttribute="trailing" secondItem="Yh6-yI-KMY" secondAttribute="trailing" id="7LA-06-cwA"/>
                             <constraint firstItem="ApD-sd-zUc" firstAttribute="leading" secondItem="GDe-1S-d1Q" secondAttribute="leading" id="7dD-DO-uPb"/>
                             <constraint firstItem="ApD-sd-zUc" firstAttribute="trailing" secondItem="GDe-1S-d1Q" secondAttribute="trailing" id="96S-Fc-86M"/>
                             <constraint firstAttribute="bottom" secondItem="ApD-sd-zUc" secondAttribute="bottom" id="B7D-Ec-8gh"/>
                             <constraint firstItem="GDe-1S-d1Q" firstAttribute="trailing" secondItem="dMO-33-dId" secondAttribute="trailing" constant="80" id="Kwd-ho-ZAy"/>
                             <constraint firstItem="MBU-p9-Ewg" firstAttribute="leading" secondItem="GDe-1S-d1Q" secondAttribute="leading" constant="80" id="L8X-hu-lN7"/>
+                            <constraint firstItem="Yh6-yI-KMY" firstAttribute="leading" secondItem="MBU-p9-Ewg" secondAttribute="leading" id="OJ0-eA-KcJ"/>
                             <constraint firstItem="GDe-1S-d1Q" firstAttribute="trailing" secondItem="MBU-p9-Ewg" secondAttribute="trailing" constant="80" id="ORn-bO-l5a"/>
                             <constraint firstItem="tWX-Xa-hVM" firstAttribute="centerX" secondItem="udq-Av-n6R" secondAttribute="centerX" id="Pr4-OQ-yxz"/>
                             <constraint firstItem="tWX-Xa-hVM" firstAttribute="centerY" secondItem="udq-Av-n6R" secondAttribute="centerY" constant="24" id="RKl-jX-zBC"/>
                             <constraint firstItem="MBU-p9-Ewg" firstAttribute="top" secondItem="dMO-33-dId" secondAttribute="bottom" constant="24" id="Wge-xn-fb2"/>
                             <constraint firstItem="dMO-33-dId" firstAttribute="leading" secondItem="GDe-1S-d1Q" secondAttribute="leading" constant="80" id="pyo-d5-kjv"/>
                             <constraint firstItem="ApD-sd-zUc" firstAttribute="top" secondItem="GDe-1S-d1Q" secondAttribute="top" id="xAR-Ms-D9Z"/>
+                            <constraint firstItem="Yh6-yI-KMY" firstAttribute="top" secondItem="MBU-p9-Ewg" secondAttribute="bottom" id="xo3-cf-XBI"/>
                             <constraint firstItem="tWX-Xa-hVM" firstAttribute="top" secondItem="MBU-p9-Ewg" secondAttribute="bottom" constant="72" id="zH5-zM-B9V"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="GDe-1S-d1Q"/>
@@ -901,11 +914,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Uv-gO-TAa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="696" y="-64"/>
+            <point key="canvasLocation" x="695.6521739130435" y="-64.402173913043484"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Q0Y-d1-PDS"/>
-        <segue reference="U81-SO-RvW"/>
+        <segue reference="Jqo-0i-naz"/>
+        <segue reference="45O-xH-XsU"/>
     </inferredMetricsTieBreakers>
 </document>
