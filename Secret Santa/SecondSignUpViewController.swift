@@ -27,6 +27,8 @@ class SecondSignUpViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.setupToHideKeyboardOnTapOnView()
+        
         emailField.delegate = self
         passwordField.delegate = self
         
