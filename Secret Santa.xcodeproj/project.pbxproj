@@ -12,6 +12,8 @@
 		2C2A4A43239332510007DA99 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A4A42239332510007DA99 /* SignUpViewController.swift */; };
 		2C2A4A45239333C60007DA99 /* SecondSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A4A44239333C60007DA99 /* SecondSignUpViewController.swift */; };
 		2C4B70CD239766E100D4CFCE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4B70CC239766E100D4CFCE /* SettingsViewController.swift */; };
+		2C563C5A239AF45C00CFEB0C /* santa1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C563C58239AF45A00CFEB0C /* santa1.png */; };
+		2C563C5B239AF45C00CFEB0C /* santa0.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C563C59239AF45B00CFEB0C /* santa0.png */; };
 		2C7874C2239048DA00CCC4AF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7874C1239048DA00CCC4AF /* LoginViewController.swift */; };
 		2C7874C423904A0C00CCC4AF /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7874C323904A0C00CCC4AF /* SetupViewController.swift */; };
 		2CD47C7723939CF3003BD5FA /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD47C7623939CF3003BD5FA /* InitialViewController.swift */; };
@@ -35,6 +37,8 @@
 		2C2A4A42239332510007DA99 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		2C2A4A44239333C60007DA99 /* SecondSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondSignUpViewController.swift; sourceTree = "<group>"; };
 		2C4B70CC239766E100D4CFCE /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		2C563C58239AF45A00CFEB0C /* santa1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = santa1.png; sourceTree = "<group>"; };
+		2C563C59239AF45B00CFEB0C /* santa0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = santa0.png; sourceTree = "<group>"; };
 		2C7874C1239048DA00CCC4AF /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		2C7874C323904A0C00CCC4AF /* SetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupViewController.swift; sourceTree = "<group>"; };
 		2CD47C7623939CF3003BD5FA /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
@@ -77,6 +81,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		2C563C55239AF27700CFEB0C /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				2C563C59239AF45B00CFEB0C /* santa0.png */,
+				2C563C58239AF45A00CFEB0C /* santa1.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		2CFDB7DC238F6B5300F1689E = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +111,7 @@
 		2CFDB7E7238F6B5300F1689E /* Secret Santa */ = {
 			isa = PBXGroup;
 			children = (
+				2C563C55239AF27700CFEB0C /* Images */,
 				0FF3FB092390A26E00B07B26 /* Models */,
 				2CFDB7E8238F6B5300F1689E /* AppDelegate.swift */,
 				2CFDB7EA238F6B5300F1689E /* SceneDelegate.swift */,
@@ -200,8 +214,10 @@
 			files = (
 				2CFDB7F5238F6B5400F1689E /* LaunchScreen.storyboard in Resources */,
 				2CE6A338239045E700F55096 /* GoogleService-Info.plist in Resources */,
+				2C563C5B239AF45C00CFEB0C /* santa0.png in Resources */,
 				2CFDB7F2238F6B5400F1689E /* Assets.xcassets in Resources */,
 				2CFDB7F0238F6B5300F1689E /* Main.storyboard in Resources */,
+				2C563C5A239AF45C00CFEB0C /* santa1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

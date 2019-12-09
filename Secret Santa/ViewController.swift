@@ -9,8 +9,34 @@
 import UIKit
 import FirebaseAuth
 
-class ViewController: UIViewController {
-        
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return userGroup.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "personCell", for: indexPath) as? PersonCell else {
+            fatalError("Unable to dequeue PersonCell")
+        }
+        let rand = arc4random_uniform(2)
+        let imgName = "santa\(rand).png"
+        cell.imageView.image = UIImage(named: imgName)
+        cell.user = userGroup[indexPath.row]
+        cell.name.text = userGroup[indexPath.row].getName()
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        cellTap(person: userGroup[indexPath.row])
+    }
+    
+    func cellTap(person: Person) {
+        print(person.getName())
+    }
+    
+    @IBOutlet weak var groupCollectionView: UICollectionView!
+    
     var isHost: Bool!
     let menuAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     var roomID: String!
@@ -55,6 +81,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        groupCollectionView.delegate = self
+        groupCollectionView.dataSource = self
+        
         errorDismiss = false
         setupMenuActionSheet()
         let bar = self.navigationController?.navigationBar
@@ -167,6 +197,8 @@ class ViewController: UIViewController {
     
     func getRoomData() {
 
+        userGroup = []
+        
         if roomID == "" {
             performSegue(withIdentifier: "roomDisplay", sender: self)
 //            let rd = RoomDisplayViewController()
@@ -193,6 +225,7 @@ class ViewController: UIViewController {
                                     dataGroup.append([usrUID:usrList!])
                                 }
                             }
+                            var reloadTimer: Timer!
                             for usr in dataGroup {
                                 var host = false
                                 var name = false
@@ -227,6 +260,16 @@ class ViewController: UIViewController {
                                                 let person = Person(name: personName)
                                                 person.setWishList(list: personWishlist)
                                                 userGroup.append(person)
+                                                if reloadTimer != nil {
+                                                    reloadTimer.invalidate()
+                                                    
+                                                }
+                                                reloadTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { (timer) in
+                                                    reloadTimer.invalidate()
+                                                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
+                                                        self.groupCollectionView.reloadData()
+                                                    }
+                                                })
                                             }
                                         }
                                     } else if !name && !date {
@@ -235,7 +278,6 @@ class ViewController: UIViewController {
                                 }
                                 
                             }
-
                             self.navigationItem.title = self.roomName
                             print("ID: "+self.roomID)
                             print("Name: "+self.roomName)
@@ -340,3 +382,9 @@ class ViewController: UIViewController {
 
 }
 
+class PersonCell: UICollectionViewCell {
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var name: UILabel!
+    
+    var user: Person!
+}
