@@ -217,6 +217,8 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
             let codeText = groupNameField.text!
             code = codeText.replacingOccurrences(of: " ", with: "-").lowercased()
             self.groupIDField.placeholder = "Invite Code: " + code
+        } else if textField.isEqual(groupIDField) && textField.text != "" {
+            textField.text = textField.text?.replacingOccurrences(of: " ", with: "-").lowercased()
         }
     }
     
@@ -448,76 +450,80 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
                     self.activityIndicatorView.isHidden = true
                     createAlert(view: self, title: "Error", message: err.localizedDescription)
                 } else {
-                    let data = querySnapshot!.data()!
-                    if data.count != 0 {
-                        for key in data.keys {
-                            if key != "locked" && key != user.uid {
-                                let usrUID = key
-                                if usrUID != "host" && usrUID != "name" && usrUID != "date" {
-                                    let usrList = data[key] as! [String]
-                                    dataGroup.append([usrUID:usrList])
+                    if let data = querySnapshot?.data() {
+                        if data.count != 0 {
+                            for key in data.keys {
+                                if key != "locked" && key != user.uid {
+                                    let usrUID = key
+                                    if usrUID != "host" && usrUID != "name" && usrUID != "date" {
+                                        let usrList = data[key] as! [String]
+                                        dataGroup.append([usrUID:usrList])
+                                    }
                                 }
-                            }
-                        }
-                        
-                        for usr in dataGroup {
-                            var host = false
-                            var name = false
-                            var date = false
-                            var usrUID = usr.keys.first!
-                            if usrUID == "host" {
-                                host = true
-                                usrUID = usr[usrUID] as! String
-                            } else if usrUID == "name" {
-                                name = true
-                                eventName = usr[usrUID] as! String
-                            } else if usrUID == "date" {
-                                date = true
-                                eventDate = Date(timeIntervalSince1970: usr[usrUID] as! TimeInterval)
                             }
                             
-                            db.collection("users").document(usrUID).getDocument { (document, err) in
+                            for usr in dataGroup {
+                                var host = false
+                                var name = false
+                                var date = false
+                                var usrUID = usr.keys.first!
+                                if usrUID == "host" {
+                                    host = true
+                                    usrUID = usr[usrUID] as! String
+                                } else if usrUID == "name" {
+                                    name = true
+                                    eventName = usr[usrUID] as! String
+                                } else if usrUID == "date" {
+                                    date = true
+                                    eventDate = Date(timeIntervalSince1970: usr[usrUID] as! TimeInterval)
+                                }
                                 
+                                db.collection("users").document(usrUID).getDocument { (document, err) in
+                                    
+                                    if let err = err {
+                                        print(err)
+                                    } else  if let _ = document, document!.exists {
+                                        if !name && !date {
+                                            let rawdata = document!.data()!
+                                            let data = rawdata["userdata"] as! [String:Any]
+                                            let personName = (data["first"] as! String) + " " + (data["last"] as! String)
+                                            
+                                            if !host {
+                                                let personWishlist = usr[usrUID] as! [String]
+                                                let person = Person(name: personName)
+                                                person.setWishList(list: personWishlist)
+                                                userGroup.append(person)
+                                            }
+                                        }
+
+                                    } else {
+                                        print(usrUID+" does not exist")
+                                    }
+                                }
+                            }
+                            
+                            self.roomName = eventName
+                            self.roomDate = eventDate
+                            db.collection("rooms").document(self.groupIDField.text!.lowercased()).updateData([user.uid:[]]) { err in
                                 if let err = err {
-                                    print(err)
-                                } else  if let _ = document, document!.exists {
-                                    if !name && !date {
-                                        let rawdata = document!.data()!
-                                        let data = rawdata["userdata"] as! [String:Any]
-                                        let personName = (data["first"] as! String) + " " + (data["last"] as! String)
-                                        
-                                        if !host {
-                                            let personWishlist = usr[usrUID] as! [String]
-                                            let person = Person(name: personName)
-                                            person.setWishList(list: personWishlist)
-                                            userGroup.append(person)
+                                    self.activityIndicatorView.isHidden = true
+                                    createAlert(view: self, title: "Error", message: err.localizedDescription)
+                                } else {
+                                    db.collection("users").document(user.uid).updateData(["userdata.rooms" : FieldValue.arrayUnion([self.groupIDField.text!.lowercased()])]) { (err) in
+                                        if let err = err {
+                                            self.activityIndicatorView.isHidden = true
+                                            createAlert(view: self, title: "Error", message: err.localizedDescription)
+                                        } else {
+                                            // Segue to home
+                                            self.roomID = self.groupIDField.text!.lowercased()
+                                            self.performSegue(withIdentifier: "mainToHome", sender: self)
                                         }
                                     }
-
-                                } else {
-                                    print(usrUID+" does not exist")
                                 }
                             }
-                        }
-                        
-                        self.roomName = eventName
-                        self.roomDate = eventDate
-                        db.collection("rooms").document(self.groupIDField.text!.lowercased()).updateData([user.uid:[]]) { err in
-                            if let err = err {
-                                self.activityIndicatorView.isHidden = true
-                                createAlert(view: self, title: "Error", message: err.localizedDescription)
-                            } else {
-                                db.collection("users").document(user.uid).updateData(["userdata.rooms" : FieldValue.arrayUnion([self.groupIDField.text!.lowercased()])]) { (err) in
-                                    if let err = err {
-                                        self.activityIndicatorView.isHidden = true
-                                        createAlert(view: self, title: "Error", message: err.localizedDescription)
-                                    } else {
-                                        // Segue to home
-                                        self.roomID = self.groupIDField.text!.lowercased()
-                                        self.performSegue(withIdentifier: "mainToHome", sender: self)
-                                    }
-                                }
-                            }
+                        } else {
+                            self.activityIndicatorView.isHidden = true
+                            createAlert(view: self, title: "Group does not exist", message: "Please check Group ID")
                         }
                     } else {
                         self.activityIndicatorView.isHidden = true
@@ -591,8 +597,8 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
             controller.roomID = self.roomID
             controller.roomName = self.roomName
             controller.roomDate = self.roomDate
-            controller.setRoomDataTimer()
-            controller.checkRoom()
+//            controller.setRoomDataTimer()
+//            controller.checkRoom()
         }
     }
     

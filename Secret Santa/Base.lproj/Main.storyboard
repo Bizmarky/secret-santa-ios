@@ -431,13 +431,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="FrI-4u-mVW">
-                                <rect key="frame" x="0.0" y="44" width="414" height="692"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </activityIndicatorView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="CUv-rf-Rqi">
-                                <rect key="frame" x="0.0" y="188" width="414" height="548"/>
+                                <rect key="frame" x="0.0" y="236" width="414" height="500"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="EKh-bZ-Dlo">
                                     <size key="itemSize" width="105" height="135"/>
@@ -459,7 +454,7 @@
                                                         <constraint firstAttribute="width" secondItem="a2o-QR-eY7" secondAttribute="height" multiplier="1:1" id="zMf-Lh-FiC"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9F-Pm-SIH">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9F-Pm-SIH">
                                                     <rect key="frame" x="4" y="97" width="97" height="38"/>
                                                     <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="15"/>
                                                     <nil key="textColor"/>
@@ -483,15 +478,51 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gift Exchange In " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ht7-KU-TA9">
+                                <rect key="frame" x="8" y="59.999999999999993" width="398" height="25.666666666666664"/>
+                                <fontDescription key="fontDescription" name="ChalkboardSE-Bold" family="Chalkboard SE" pointSize="18"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uYJ-Om-3sm">
+                                <rect key="frame" x="16" y="97.666666666666671" width="382" height="28.333333333333329"/>
+                                <fontDescription key="fontDescription" name="ChalkboardSE-Light" family="Chalkboard SE" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vfd-W4-PFL">
+                                <rect key="frame" x="112" y="168" width="190" height="36"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                <state key="normal" title="Participants">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="participantAction:" destination="ucW-8A-26P" eventType="touchUpInside" id="DfW-r1-eIH"/>
+                                </connections>
+                            </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="FrI-4u-mVW">
+                                <rect key="frame" x="0.0" y="44" width="414" height="692"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="uYJ-Om-3sm" firstAttribute="leading" secondItem="pgM-6O-Kh1" secondAttribute="leading" constant="16" id="3jg-lP-6EZ"/>
+                            <constraint firstItem="uYJ-Om-3sm" firstAttribute="top" secondItem="ht7-KU-TA9" secondAttribute="bottom" constant="12" id="AJI-ep-y6h"/>
                             <constraint firstItem="FrI-4u-mVW" firstAttribute="top" secondItem="pgM-6O-Kh1" secondAttribute="top" id="BPU-Qg-I9z"/>
+                            <constraint firstItem="Vfd-W4-PFL" firstAttribute="leading" secondItem="pgM-6O-Kh1" secondAttribute="leading" constant="112" id="HEf-oe-gV8"/>
+                            <constraint firstItem="CUv-rf-Rqi" firstAttribute="top" secondItem="Vfd-W4-PFL" secondAttribute="bottom" constant="32" id="ITK-bC-QFj"/>
                             <constraint firstItem="CUv-rf-Rqi" firstAttribute="leading" secondItem="pgM-6O-Kh1" secondAttribute="leading" id="MI3-2q-w9D"/>
                             <constraint firstItem="CUv-rf-Rqi" firstAttribute="bottom" secondItem="pgM-6O-Kh1" secondAttribute="bottom" id="Mcx-CI-UBU"/>
+                            <constraint firstItem="pgM-6O-Kh1" firstAttribute="trailing" secondItem="ht7-KU-TA9" secondAttribute="trailing" constant="8" id="Or1-JL-UQ0"/>
+                            <constraint firstItem="pgM-6O-Kh1" firstAttribute="trailing" secondItem="uYJ-Om-3sm" secondAttribute="trailing" constant="16" id="QoN-tG-fQP"/>
+                            <constraint firstItem="pgM-6O-Kh1" firstAttribute="trailing" secondItem="Vfd-W4-PFL" secondAttribute="trailing" constant="112" id="SZa-YU-KHt"/>
                             <constraint firstAttribute="trailing" secondItem="CUv-rf-Rqi" secondAttribute="trailing" id="fOx-z2-gWh"/>
-                            <constraint firstItem="CUv-rf-Rqi" firstAttribute="top" secondItem="pgM-6O-Kh1" secondAttribute="top" constant="144" id="nxX-cI-StG"/>
+                            <constraint firstItem="CUv-rf-Rqi" firstAttribute="top" secondItem="pgM-6O-Kh1" secondAttribute="top" constant="192" id="nxX-cI-StG"/>
+                            <constraint firstItem="ht7-KU-TA9" firstAttribute="leading" secondItem="pgM-6O-Kh1" secondAttribute="leading" constant="8" id="nxu-yO-5ZH"/>
                             <constraint firstAttribute="trailing" secondItem="FrI-4u-mVW" secondAttribute="trailing" id="oRC-QE-yFw"/>
+                            <constraint firstItem="ht7-KU-TA9" firstAttribute="top" secondItem="pgM-6O-Kh1" secondAttribute="top" constant="16" id="q98-or-1CN"/>
                             <constraint firstItem="FrI-4u-mVW" firstAttribute="leading" secondItem="uf9-nH-EEz" secondAttribute="leading" id="tsQ-mp-XkX"/>
                             <constraint firstAttribute="bottom" secondItem="FrI-4u-mVW" secondAttribute="bottom" id="uts-3J-ZGS"/>
                         </constraints>
@@ -510,11 +541,13 @@
                             </button>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" style="plain" id="e42-8j-7JA">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qtC-Fb-OP8">
+                            <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qtC-Fb-OP8">
                                 <rect key="frame" x="302" y="5.6666666666666679" width="92" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                <state key="normal" title="Wishlist"/>
+                                <state key="normal" title="Wishlist">
+                                    <color key="titleColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
                                     <segue destination="yXl-qr-OVs" kind="show" identifier="homeToWish" id="cfP-Ej-dcq"/>
                                 </connections>
@@ -523,7 +556,11 @@
                     </navigationItem>
                     <connections>
                         <outlet property="activityIndicatorView" destination="FrI-4u-mVW" id="Oca-0w-IEu"/>
+                        <outlet property="giftExchangeLabel" destination="ht7-KU-TA9" id="hmV-aR-dkt"/>
+                        <outlet property="giftSublabel" destination="uYJ-Om-3sm" id="1Y2-td-0XN"/>
                         <outlet property="groupCollectionView" destination="CUv-rf-Rqi" id="n6O-do-9Ef"/>
+                        <outlet property="participantButton" destination="Vfd-W4-PFL" id="aP5-Fh-jMK"/>
+                        <outlet property="wishListButton" destination="qtC-Fb-OP8" id="Mj1-wP-JYW"/>
                         <segue destination="dEQ-rU-DHc" kind="presentation" identifier="logoutSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="45O-xH-XsU"/>
                         <segue destination="Dsa-vB-fLn" kind="presentation" identifier="homeToMain" modalPresentationStyle="fullScreen" modalTransitionStyle="coverVertical" id="Q0Y-d1-PDS"/>
                         <segue destination="ixc-kG-7kN" kind="presentation" identifier="roomDisplay" id="H4O-jL-QBG"/>
@@ -630,7 +667,7 @@
             <objects>
                 <tableViewController title="Wishlist View Controller" id="yXl-qr-OVs" customClass="WishlistViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="dJa-FM-R6M">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
