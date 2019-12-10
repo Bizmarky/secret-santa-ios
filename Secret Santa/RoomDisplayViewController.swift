@@ -127,8 +127,9 @@ class RoomDisplayViewController: UIViewController, UITableViewDataSource, UITabl
     func selectRoom(ID: String) {
         let presenter = (presentingViewController as! UINavigationController).viewControllers[0] as! ViewController
         presenter.roomID = ID
+        presenter.activityIndicatorView.isHidden = false
         dismiss(animated: true) {
-            presenter.getRoomData()
+            presenter.setRoomDataTimer()
         }
     }
     

@@ -35,14 +35,14 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     func cellTap(person: Person) {
         let action = UIAlertController(title: person.getName(), message: nil, preferredStyle: .actionSheet)
         
-        if !locked {
+        if !locked && isHost {
             action.addAction(UIAlertAction(title: "Remove from group", style: .default, handler: { (action) in
                 self.removeAction(person: person)
             }))
         }
         
         action.addAction(UIAlertAction(title: "Report", style: .destructive, handler: { (action) in
-            self.reportAction(person: person)
+        self.reportAction(person: person)
         }))
         
         action.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -141,6 +141,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     var giftExchangeTimer: Timer!
     var timerInterval = 0.2
     var listener: ListenerRegistration!
+    var hostID: String!
     
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
@@ -163,7 +164,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         roomDataTimer = Timer.scheduledTimer(withTimeInterval: timerInterval, repeats: true, block: { (timer) in
             if self.viewAppeared {
                 self.roomDataTimer.invalidate()
-                self.getRoomData()
+                self.setupListener()
             }
         })
     }
@@ -174,22 +175,18 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func setupHost() {
-        print("Setup Host")
         if !locked && userGroup!.count >= 2 {
-            print("1")
             participantButton.setTitleColor(.white, for: .normal)
             participantButton.setTitle("Start Game", for: .normal)
             participantButton.isUserInteractionEnabled = true
             participantButton.backgroundColor = .blue
         } else {
             if locked {
-                print("2")
                 participantButton.setTitle("Game Started", for: .normal)
                 participantButton.setTitleColor(.lightGray, for: .normal)
                 participantButton.isUserInteractionEnabled = false
                 participantButton.backgroundColor = .gray
             } else {
-                print("3")
                 participantButton.setTitle("Invite More People", for: .normal)
             }
             participantButton.setTitleColor(.white, for: .normal)
@@ -343,194 +340,189 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         listener.remove()
     }
     
-    func getRoomData() {
-        var done = true
-        print("GETTING ROOM DATA")
-        
+    func setupListener() {
         if listener != nil {
             listener.remove()
+            listener = nil
         }
-        listener = nil
-        
-        if roomID == "" {
+        self.dataComplete = true
+        listener = db.collection("rooms").document(roomID).addSnapshotListener({ (snapshot, err) in
+            
+            if let err = err {
+                createAlert(view: self, title: "Error", message: err.localizedDescription)
+                return
+            }
+            
+            if self.dataComplete {
+                self.getRoomData()
+            }
+            
+//            let source = snapshot!.metadata.hasPendingWrites ? "Local" : "Server"
+//            print("\(source) data: \(snapshot!.data() ?? [:])")
+            
+        })
+//        listener = db.collection("rooms").document(roomID).addSnapshotListener({ (snapshot, err) in
+//
+//        })
+    }
+    var dataComplete = true
+    func getRoomData() {
+        self.dataComplete = false
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0.5) {
             userGroup = []
             dataGroup = []
-            performSegue(withIdentifier: "roomDisplay", sender: self)
-//            let rd = RoomDisplayViewController()
-//            self.present(rd, animated: true, completion: nil)
-        } else {
-            listener = db.collection("rooms").document(roomID).addSnapshotListener(includeMetadataChanges: true, listener: { (querySnapshot, err) in
-                if let err = err {
-                    createAlert(view: self, title: "Error", message: err.localizedDescription)
-                    return
-                }
-                if done {
-                    done = false
-                    userGroup = []
-                    dataGroup = []
-                    if !querySnapshot!.metadata.hasPendingWrites {
+            
+            if self.roomID == "" {
+
+                self.performSegue(withIdentifier: "roomDisplay", sender: self)
+    //            let rd = RoomDisplayViewController()
+    //            self.present(rd, animated: true, completion: nil)
+            } else {
+                db.collection("rooms").document(self.roomID).getDocument(completion: { (querySnapshot, err) in
+                    if let err = err {
+                        createAlert(view: self, title: "Error", message: err.localizedDescription)
+                        return
+                    } else {
                         if let data = querySnapshot?.data() {
                             if data.count != 0 {
-                                db.collection("users").document(user.uid).getDocument { (doc, err) in
-                                    if let err = err {
-                                        createAlert(view: self, title: "Error", message: err.localizedDescription)
-                                        done = true
-                                        return
-                                    } else {
-                                        if let data = doc?.data() {
-                                            let userData = data["userdata"] as! [String : Any]
-                                            if !(userData["rooms"] as! [String]).contains(self.roomID) && !(userData["host"] as! [String]).contains(self.roomID) {
-                                                self.checkRoom()
-                                                createAlert(view: self, title: "Error Loading Group", message: nil) { (complete) in
-                                                    if joinRoomList.count == 0 && hostRoomList.count == 0 {
-                                                        self.errorDismiss = true
-                                                        self.performSegue(withIdentifier: "homeToMain", sender: self)
-                                                    } else {
-                                                        self.performSegue(withIdentifier: "roomDisplay", sender: self)
-                                                    }
-                                                    done = true
-                                                    return
-                                                }
-                                            }
-                                        } else {
-                                            self.checkRoom()
-                                            createAlert(view: self, title: "Error Loading Group", message: nil) { (complete) in
-                                                self.performSegue(withIdentifier: "roomDisplay", sender: self)
-                                                done = true
-                                                return
-                                            }
-                                        }
-                                        
-                                        self.locked = (data["locked"] as! Bool)
-                                        if !self.locked {
-                                            self.wishListButton.isUserInteractionEnabled = true
-                                            self.wishListButton.setTitleColor(.systemBlue, for: .normal)
-                                        }
-                                        self.isHost = (data["host"] as! String) == user.uid
-                                        
-                                        for key in data.keys {
-                                            if key != "locked" {
-                                                let usrUID = key
-                                                var usrList: Any!
-                                                if usrUID == "host" || usrUID == "name" {
-                                                    usrList = data[key] as! String
-                                                } else if usrUID == "date" {
-                                                    usrList = data[key] as! TimeInterval
-                                                } else {
-                                                    usrList = data[key] as! [String]
-                                                }
-                                                dataGroup.append([usrUID:usrList!])
-                                            }
-                                        }
-                                        var reloadTimer: Timer!
-                                        for usr in dataGroup {
-                                            var host = false
-                                            var name = false
-                                            var date = false
-                                            var usrUID = usr.keys.first!
-                                            if usrUID == "host" {
-                                                host = true
-                                                usrUID = usr[usrUID] as! String
-                                            } else if usrUID == "name" {
-                                                name = true
-                                                self.roomName = (usr[usrUID] as! String)
-                                            } else if usrUID == "date" {
-                                                date = true
-                                                self.roomDate = Date(timeIntervalSince1970: usr[usrUID] as! TimeInterval)
-                                            }
-                                            db.collection("users").document(usrUID).getDocument { (document, err) in
-                                                
-                                                if let err = err {
-                                                    print(err)
-                                                } else  if let _ = document, document!.exists {
-                                                    let rawdata = document!.data()!
-                                                    let data = rawdata["userdata"] as! [String:Any]
-                                                    let personName = (data["first"] as! String) + " " + (data["last"] as! String)
+                                if let _ = data[user.uid] as? [String] {
+                                    self.locked = (data["locked"] as! Bool)
+                                    if !self.locked {
+                                        self.wishListButton.isUserInteractionEnabled = true
+                                        self.wishListButton.setTitleColor(.systemBlue, for: .normal)
+                                    }
+                                    self.isHost = (data["host"] as! String) == user.uid
 
-                                                    if host {
-                                                        self.roomHost = personName
-                                                    } else {
-                                                        let personWishlist = usr[usrUID] as! [String]
-                                                        if usrUID == user.uid {
-                                                            wishlist = personWishlist
-                                                        } else {
-                                                            let person = Person(name: personName)
-                                                            person.setWishList(list: personWishlist)
-                                                            person.setID(newID: usrUID)
-                                                            userGroup.append(person)
-                                                            if reloadTimer != nil {
-                                                                reloadTimer.invalidate()
-                                                                
-                                                            }
-                                                            reloadTimer = Timer.scheduledTimer(withTimeInterval: self.timerInterval, repeats: true, block: { (timer) in
-                                                                reloadTimer.invalidate()
-                                                                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
-                                                                    if self.isHost {
-                                                                        self.setupHost()
-                                                                    }
-                                                                    self.groupCollectionView.reloadData()
-                                                                    done = true
-                                                                }
-                                                            })
-                                                        }
-                                                    }
-                                                } else if !name && !date {
-                                                    print(usrUID+" does not exist")
-                                                }
+                                    for key in data.keys {
+                                        if key != "locked" {
+                                            let usrUID = key
+                                            var usrList: Any!
+                                            if usrUID == "host" || usrUID == "name" {
+                                                usrList = data[key] as! String
+                                            } else if usrUID == "date" {
+                                                usrList = data[key] as! TimeInterval
+                                            } else {
+                                                usrList = data[key] as! [String]
                                             }
-                                            
+                                            dataGroup.append([usrUID:usrList!])
                                         }
-                                        self.navigationItem.title = self.roomName
-                                        print("ID: "+self.roomID)
-                                        print("Name: "+self.roomName)
-                                        let formatter = DateFormatter()
-                                        formatter.dateFormat = "MMM d, yyyy h:mm a"
-                                        print("Date: "+formatter.string(from: self.roomDate))
-                                        
-                                        self.activityTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (timer) in
-                                            if self.activityIndicatorView != nil {
-                                                self.activityTimer.invalidate()
-                                                self.activityIndicatorView.isHidden = true
+                                    }
+                                    var reloadTimer: Timer!
+                                    for usr in dataGroup {
+                                        var host = false
+                                        var name = false
+                                        var date = false
+                                        var usrUID = usr.keys.first!
+                                        if usrUID == "host" {
+                                            host = true
+                                            usrUID = usr[usrUID] as! String
+                                        } else if usrUID == "name" {
+                                            name = true
+                                            self.roomName = (usr[usrUID] as! String)
+                                        } else if usrUID == "date" {
+                                            date = true
+                                            self.roomDate = Date(timeIntervalSince1970: usr[usrUID] as! TimeInterval)
+                                        }
+                                        db.collection("users").document(usrUID).getDocument { (document, err) in
+                                            
+                                            if let err = err {
+                                                print(err)
+                                            } else  if let _ = document, document!.exists {
+                                                let rawdata = document!.data()!
+                                                let data = rawdata["userdata"] as! [String:Any]
+                                                let personName = (data["first"] as! String) + " " + (data["last"] as! String)
+
+                                                if host {
+                                                    self.roomHost = personName
+                                                    self.hostID = usrUID
+                                                } else {
+                                                    let personWishlist = usr[usrUID] as! [String]
+                                                    if usrUID == user.uid {
+                                                        wishlist = personWishlist
+                                                    } else {
+                                                        let person = Person(name: personName)
+                                                        person.setWishList(list: personWishlist)
+                                                        person.setID(newID: usrUID)
+                                                        userGroup.append(person)
+                                                    }
+                                                }
+                                                
+                                                if reloadTimer != nil {
+                                                    reloadTimer.invalidate()
+                                                }
+                                                reloadTimer = Timer.scheduledTimer(withTimeInterval: self.timerInterval, repeats: true, block: { (timer) in
+                                                    reloadTimer.invalidate()
+                                                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
+                                                        if self.isHost {
+                                                            self.setupHost()
+                                                        }
+                                                        self.groupCollectionView.reloadData()
+                                                        self.dataComplete = true
+                                                    }
+                                                })
+                                                
+                                            } else if !name && !date {
+                                                print(usrUID+" does not exist")
                                             }
-                                        })
-                                        defaults.set(self.roomID, forKey: "currentRoom")
+                                        }
+                                        
+                                    }
+                                    
+                                    for usr in userGroup {
+                                        if usr.getID() == self.hostID {
+                                            usr.setHost(isHost: true)
+                                        }
+                                    }
+                                    
+                                    self.navigationItem.title = self.roomName
+    //                                print("ID: "+self.roomID)
+    //                                print("Name: "+self.roomName)
+    //                                let formatter = DateFormatter()
+    //                                formatter.dateFormat = "MMM d, yyyy h:mm a"
+    //                                print("Date: "+formatter.string(from: self.roomDate))
+                                    
+                                    self.activityTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (timer) in
+                                        if self.activityIndicatorView != nil {
+                                            self.activityTimer.invalidate()
+                                            self.activityIndicatorView.isHidden = true
+                                        }
+                                    })
+                                    defaults.set(self.roomID, forKey: "currentRoom")
+                                    
+                                } else {
+                                    self.checkRoom()
+                                    createAlert(view: self, title: "Error Loading Group", message: nil) { (complete) in
+                                        if joinRoomList.count == 0 && hostRoomList.count == 0 {
+                                            self.errorDismiss = true
+                                            self.performSegue(withIdentifier: "homeToMain", sender: self)
+                                        } else {
+                                            self.performSegue(withIdentifier: "roomDisplay", sender: self)
+                                        }
                                     }
                                 }
-                            }
-                        } else {
-                            var count = 0
-                            for room in hostRoomList {
-                                if room == self.roomID {
-                                    hostRoomList.remove(at: count)
-                                }
-                                count += 1
-                            }
-                            
-                            count = 0
-                            for room in joinRoomList {
-                                if room == self.roomID {
-                                    joinRoomList.remove(at: count)
-                                }
-                                count += 1
-                            }
-                            if hostRoomList.count + joinRoomList.count == 0 {
-                                self.errorDismiss = true
-                                self.performSegue(withIdentifier: "homeToMain", sender: self)
                             } else {
-                                self.performSegue(withIdentifier: "roomDisplay", sender: self)
+                                var count = 0
+                                for room in hostRoomList {
+                                    if room == self.roomID {
+                                        hostRoomList.remove(at: count)
+                                    }
+                                    count += 1
+                                }
+                                
+                                count = 0
+                                for room in joinRoomList {
+                                    if room == self.roomID {
+                                        joinRoomList.remove(at: count)
+                                    }
+                                    count += 1
+                                }
+                                self.dataComplete = true
                             }
                         }
                     }
-                }
-            })
-        
+                })
+            }
         }
-
-        
-        // Get host
-        // Get users
-        // Get room name
-                
     }
     
     // Assigns each person with their secret santa

@@ -14,9 +14,19 @@ class Person: Any {
     var secretPerson: Person?
     var id = UUID().uuidString
     var personWishList: [String]!
+    var host: Bool!
     
     init(name: String) {
         self.name = name
+        self.host = false
+    }
+    
+    func isHost() -> Bool {
+        return self.host
+    }
+    
+    func setHost(isHost: Bool) {
+        self.host = isHost
     }
     
     func getName() -> String {
