@@ -12,8 +12,7 @@
 		2C2A4A43239332510007DA99 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A4A42239332510007DA99 /* SignUpViewController.swift */; };
 		2C2A4A45239333C60007DA99 /* SecondSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A4A44239333C60007DA99 /* SecondSignUpViewController.swift */; };
 		2C4B70CD239766E100D4CFCE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4B70CC239766E100D4CFCE /* SettingsViewController.swift */; };
-		2C563C5A239AF45C00CFEB0C /* santa1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C563C58239AF45A00CFEB0C /* santa1.png */; };
-		2C563C5B239AF45C00CFEB0C /* santa0.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C563C59239AF45B00CFEB0C /* santa0.png */; };
+		2C563C5B239AF45C00CFEB0C /* santa.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C563C59239AF45B00CFEB0C /* santa.png */; };
 		2C7874C2239048DA00CCC4AF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7874C1239048DA00CCC4AF /* LoginViewController.swift */; };
 		2C7874C423904A0C00CCC4AF /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7874C323904A0C00CCC4AF /* SetupViewController.swift */; };
 		2CD47C7723939CF3003BD5FA /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD47C7623939CF3003BD5FA /* InitialViewController.swift */; };
@@ -29,6 +28,7 @@
 		2CFDB7F5238F6B5400F1689E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CFDB7F3238F6B5400F1689E /* LaunchScreen.storyboard */; };
 		2CFDB7FD238F6CC100F1689E /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDB7FC238F6CC100F1689E /* Person.swift */; };
 		AB669B4495E1B09226B1C2EA /* Pods_Secret_Santa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1508E3B07A338E866F8E008 /* Pods_Secret_Santa.framework */; };
+		C9A3C43823A068400049E881 /* present.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3C43723A068400049E881 /* present.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,8 +37,7 @@
 		2C2A4A42239332510007DA99 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		2C2A4A44239333C60007DA99 /* SecondSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondSignUpViewController.swift; sourceTree = "<group>"; };
 		2C4B70CC239766E100D4CFCE /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		2C563C58239AF45A00CFEB0C /* santa1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = santa1.png; sourceTree = "<group>"; };
-		2C563C59239AF45B00CFEB0C /* santa0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = santa0.png; sourceTree = "<group>"; };
+		2C563C59239AF45B00CFEB0C /* santa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = santa.png; sourceTree = "<group>"; };
 		2C7874C1239048DA00CCC4AF /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		2C7874C323904A0C00CCC4AF /* SetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupViewController.swift; sourceTree = "<group>"; };
 		2CD47C7623939CF3003BD5FA /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +55,7 @@
 		2CFDB7F6238F6B5400F1689E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CFDB7FC238F6CC100F1689E /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		343365043F1DB03BD3E8BEBD /* Pods-Secret Santa.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Secret Santa.release.xcconfig"; path = "Target Support Files/Pods-Secret Santa/Pods-Secret Santa.release.xcconfig"; sourceTree = "<group>"; };
+		C9A3C43723A068400049E881 /* present.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = present.png; sourceTree = "<group>"; };
 		E1508E3B07A338E866F8E008 /* Pods_Secret_Santa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Secret_Santa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E70D88946CC674DFB070C850 /* Pods-Secret Santa.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Secret Santa.debug.xcconfig"; path = "Target Support Files/Pods-Secret Santa/Pods-Secret Santa.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,8 +84,8 @@
 		2C563C55239AF27700CFEB0C /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				2C563C59239AF45B00CFEB0C /* santa0.png */,
-				2C563C58239AF45A00CFEB0C /* santa1.png */,
+				C9A3C43723A068400049E881 /* present.png */,
+				2C563C59239AF45B00CFEB0C /* santa.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -214,10 +214,10 @@
 			files = (
 				2CFDB7F5238F6B5400F1689E /* LaunchScreen.storyboard in Resources */,
 				2CE6A338239045E700F55096 /* GoogleService-Info.plist in Resources */,
-				2C563C5B239AF45C00CFEB0C /* santa0.png in Resources */,
+				2C563C5B239AF45C00CFEB0C /* santa.png in Resources */,
+				C9A3C43823A068400049E881 /* present.png in Resources */,
 				2CFDB7F2238F6B5400F1689E /* Assets.xcassets in Resources */,
 				2CFDB7F0238F6B5300F1689E /* Main.storyboard in Resources */,
-				2C563C5A239AF45C00CFEB0C /* santa1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

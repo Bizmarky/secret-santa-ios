@@ -12,6 +12,78 @@ import FirebaseFirestore
 
 class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
+    @IBOutlet weak var groupCollectionView: UICollectionView!
+    
+    @IBOutlet weak var participantButton: UIButton!
+    
+    @IBOutlet weak var wishListButton: UIButton!
+    
+    var isHost: Bool!
+    var locked: Bool!
+    var roomID: String!
+    var roomName: String!
+    var roomDate: Date!
+    var roomHost: String!
+    var listDownloadTimer: Timer!
+    var activityTimer: Timer!
+    var errorDismiss: Bool!
+    var viewAppeared = false
+    var roomDataTimer: Timer!
+    var delete = false
+    var giftExchangeTimer: Timer!
+    var timerInterval = 0.2
+    var listener: ListenerRegistration!
+    var hostID: String!
+    var pairID: String!
+    var pairName: String!
+    var editingRoom: Bool!
+    
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    
+    @IBOutlet weak var giftExchangeLabel: UILabel!
+    @IBOutlet weak var giftSublabel: UILabel!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+                
+        self.pairID = ""
+        self.pairName = ""
+        self.editingRoom = false
+        
+        if self.roomID != nil {
+            checkRoom()
+            setRoomDataTimer()
+        }
+        
+        participantButton.isHidden = true
+        giftExchangeLabel.text = ""
+        giftSublabel.text = ""
+        giftExchangeTimer = Timer.scheduledTimer(withTimeInterval: timerInterval, repeats: true, block: { (timer) in
+            self.updateGiftExchange()
+        })
+        
+        groupCollectionView.delegate = self
+        groupCollectionView.dataSource = self
+        
+        errorDismiss = false
+        let bar = self.navigationController?.navigationBar
+        let tapView = UIView(frame: CGRect(x: (bar?.center.x)!-50, y: (bar?.center.y)!-20, width: 100, height: 40))
+        tapView.backgroundColor = .clear
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showGroups))
+        tap.numberOfTouchesRequired = 1
+        tap.numberOfTapsRequired = 1
+        self.navigationController?.navigationBar.addSubview(tapView)
+        tapView.addGestureRecognizer(tap)
+        
+        viewAppeared = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        listDownloadTimer = Timer.scheduledTimer(timeInterval: timerInterval, target: self, selector: #selector(getLists), userInfo: nil, repeats: false)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return userGroup.count
     }
@@ -20,11 +92,18 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "personCell", for: indexPath) as? PersonCell else {
             fatalError("Unable to dequeue PersonCell")
         }
-        let rand = arc4random_uniform(2)
-        let imgName = "santa\(rand).png"
+        var imgName = "santa.png"
+        if self.locked != nil {
+            if self.locked {
+                if userGroup[indexPath.row].getID() == self.pairID {
+                    imgName = "present.png"
+                }
+            }
+        }
         cell.imageView.image = UIImage(named: imgName)
         cell.user = userGroup[indexPath.row]
         cell.name.text = userGroup[indexPath.row].getName()
+        cell.id = userGroup[indexPath.row].getID()
         return cell
     }
     
@@ -35,18 +114,30 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     func cellTap(person: Person) {
         let action = UIAlertController(title: person.getName(), message: nil, preferredStyle: .actionSheet)
         
-        if !locked && isHost {
-            action.addAction(UIAlertAction(title: "Remove from group", style: .default, handler: { (action) in
-                self.removeAction(person: person)
-            }))
+        if !locked {
+            if isHost {
+                action.addAction(UIAlertAction(title: "Remove from group", style: .default, handler: { (action) in
+                    self.removeAction(person: person)
+                }))
+            }
+        } else {
+            if person.getID() == self.pairID {
+                action.addAction(UIAlertAction(title: "View Wishlist", style: .default, handler: { (action) in
+                    self.viewWishlist(person: person)
+                }))
+            }
         }
         
         action.addAction(UIAlertAction(title: "Report", style: .destructive, handler: { (action) in
-        self.reportAction(person: person)
+            self.reportAction(person: person)
         }))
         
         action.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(action, animated: true, completion: nil)
+    }
+    
+    func viewWishlist(person: Person) {
+        self.performSegue(withIdentifier: "homeToWish", sender: self)
     }
     
     func removeAction(person: Person) {
@@ -119,36 +210,31 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         textView.becomeFirstResponder()
     }
     
-    @IBOutlet weak var groupCollectionView: UICollectionView!
-    
-    @IBOutlet weak var participantButton: UIButton!
-    
-    @IBOutlet weak var wishListButton: UIButton!
-    
-    var isHost: Bool!
-    var locked: Bool!
-    let menuAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-    var roomID: String!
-    var roomName: String!
-    var roomDate: Date!
-    var roomHost: String!
-    var listDownloadTimer: Timer!
-    var activityTimer: Timer!
-    var errorDismiss: Bool!
-    var viewAppeared = false
-    var roomDataTimer: Timer!
-    var delete = false
-    var giftExchangeTimer: Timer!
-    var timerInterval = 0.2
-    var listener: ListenerRegistration!
-    var hostID: String!
-    
-    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
-    
-    @IBOutlet weak var giftExchangeLabel: UILabel!
-    @IBOutlet weak var giftSublabel: UILabel!
-    
     @IBAction func menuAction(_ sender: Any) {
+        
+        let menuAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        if isHost {
+            let a = UIAlertAction(title: "Edit Group", style: .default, handler: { (action) in
+                self.editRoom()
+            })
+            a.isEnabled = !self.locked
+            menuAlert.addAction(a)
+        }
+        
+        menuAlert.addAction(UIAlertAction(title: "Groups", style: .default, handler: { (action) in
+            self.performSegue(withIdentifier: "roomDisplay", sender: self)
+        }))
+        menuAlert.addAction(UIAlertAction(title: "Create/Join", style: .default, handler: { (action) in
+            self.performSegue(withIdentifier: "homeToMain", sender: self)
+        }))
+        menuAlert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) in
+            self.performSegue(withIdentifier: "settingsSegue", sender: self)
+        }))
+        menuAlert.addAction(UIAlertAction(title: "Logout", style: .destructive, handler: { (action) in
+            self.logoutAction()
+        }))
+        menuAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         self.present(menuAlert, animated: true, completion: nil)
         
@@ -169,11 +255,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         })
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        listDownloadTimer = Timer.scheduledTimer(timeInterval: timerInterval, target: self, selector: #selector(getLists), userInfo: nil, repeats: false)
-    }
-    
     func setupHost() {
         if !locked && userGroup!.count >= 2 {
             participantButton.setTitleColor(.white, for: .normal)
@@ -188,17 +269,18 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                 participantButton.backgroundColor = .gray
             } else {
                 participantButton.setTitle("Invite More People", for: .normal)
+                participantButton.setTitleColor(.white, for: .normal)
+                participantButton.isUserInteractionEnabled = true
+                participantButton.backgroundColor = .red
             }
-            participantButton.setTitleColor(.white, for: .normal)
-            participantButton.isUserInteractionEnabled = true
-            participantButton.backgroundColor = .red
         }
         participantButton.translatesAutoresizingMaskIntoConstraints = false
         participantButton.layer.cornerRadius = participantButton.frame.height/4
     }
     
+    
     @IBAction func participantAction(_ sender: Any) {
-        if isHost {
+        if isHost && !locked {
             if userGroup!.count >= 2 {
                 self.pairPeople()
             } else {
@@ -206,38 +288,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                 self.present(shareController, animated: true, completion: nil)
             }
         }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        
-        if self.roomID != nil {
-            checkRoom()
-            setRoomDataTimer()
-        }
-        
-        giftExchangeLabel.text = ""
-        giftSublabel.text = ""
-        giftExchangeTimer = Timer.scheduledTimer(withTimeInterval: timerInterval, repeats: true, block: { (timer) in
-            self.updateGiftExchange()
-        })
-        
-        groupCollectionView.delegate = self
-        groupCollectionView.dataSource = self
-        
-        errorDismiss = false
-        setupMenuActionSheet()
-        let bar = self.navigationController?.navigationBar
-        let tapView = UIView(frame: CGRect(x: (bar?.center.x)!-50, y: (bar?.center.y)!-20, width: 100, height: 40))
-        tapView.backgroundColor = .clear
-        let tap = UITapGestureRecognizer(target: self, action: #selector(showGroups))
-        tap.numberOfTouchesRequired = 1
-        tap.numberOfTapsRequired = 1
-        self.navigationController?.navigationBar.addSubview(tapView)
-        tapView.addGestureRecognizer(tap)
-        
-        viewAppeared = true
     }
     
     func checkRoom() {
@@ -291,24 +341,9 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
 //        self.present(rd, animated: true, completion: nil)
     }
     
-    func setupMenuActionSheet() {
-        
-        menuAlert.addAction(UIAlertAction(title: "Groups", style: .default, handler: { (action) in
-            self.performSegue(withIdentifier: "roomDisplay", sender: self)
-//            let rd = RoomDisplayViewController()
-//            self.present(rd, animated: true, completion: nil)
-        }))
-        menuAlert.addAction(UIAlertAction(title: "Create/Join", style: .default, handler: { (action) in
-            self.performSegue(withIdentifier: "homeToMain", sender: self)
-        }))
-        menuAlert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) in
-            self.performSegue(withIdentifier: "settingsSegue", sender: self)
-        }))
-        menuAlert.addAction(UIAlertAction(title: "Logout", style: .destructive, handler: { (action) in
-            self.logoutAction()
-        }))
-        menuAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
+    func editRoom() {
+        editingRoom = true
+        self.performSegue(withIdentifier: "homeToMain", sender: self)
     }
     
     func logoutAction() {
@@ -390,11 +425,14 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                                     if !self.locked {
                                         self.wishListButton.isUserInteractionEnabled = true
                                         self.wishListButton.setTitleColor(.systemBlue, for: .normal)
+                                    } else {
+                                        self.wishListButton.isUserInteractionEnabled = false
+                                        self.wishListButton.setTitleColor(.gray, for: .normal)
                                     }
                                     self.isHost = (data["host"] as! String) == user.uid
 
                                     for key in data.keys {
-                                        if key != "locked" {
+                                        if key != "locked" && key != "pairs" {
                                             let usrUID = key
                                             var usrList: Any!
                                             if usrUID == "host" || usrUID == "name" {
@@ -444,6 +482,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                                                         person.setWishList(list: personWishlist)
                                                         person.setID(newID: usrUID)
                                                         userGroup.append(person)
+                                                        print(personName+" wishlist: ")
+                                                        print(personWishlist)
                                                     }
                                                 }
                                                 
@@ -453,11 +493,20 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                                                 reloadTimer = Timer.scheduledTimer(withTimeInterval: self.timerInterval, repeats: true, block: { (timer) in
                                                     reloadTimer.invalidate()
                                                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
+                                                        userGroup.sort {
+                                                            $0.getName() < $1.getName()
+                                                            
+                                                        }
                                                         if self.isHost {
                                                             self.setupHost()
                                                         }
-                                                        self.groupCollectionView.reloadData()
-                                                        self.dataComplete = true
+                                                        if self.locked {
+                                                            self.getPair()
+                                                        } else {
+                                                            self.groupCollectionView.reloadData()
+                                                            self.dataComplete = true
+                                                        }
+                                                        self.participantButton.isHidden = false
                                                     }
                                                 })
                                                 
@@ -525,45 +574,131 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         }
     }
     
+    func getPair() {
+        db.collection("rooms").document(self.roomID).getDocument { (snapshot, err) in
+            if let err = err {
+                createAlert(view: self, title: "Error", message: err.localizedDescription)
+                return
+            }
+            
+            if let data = snapshot?.data() {
+                let pairs = data["pairs"] as! [String:String]
+                
+                for key in pairs.keys {
+                    if key == user.uid {
+                        self.pairID = pairs[key]
+                        self.groupCollectionView.reloadData()
+                        self.dataComplete = true
+                        return
+                    }
+                }
+                
+            } else {
+                createAlert(view: self, title: "Error", message: "Couldn't retrieve data")
+            }
+        }
+    }
+    
     // Assigns each person with their secret santa
     
     func pairPeople() {
+        
+        if wishlist.count == 0 {
+            createAlert(view: self, title: "Error", message: "Please add items to your wishlist first")
+            return
+        }
+        
+        // Check everyone's wishlist
+        var wishListPeople:[Person] = []
+        
+        for user in userGroup {
+            if user.getWishList().count == 0 {
+                wishListPeople.append(user)
+            }
+        }
+                
+        if wishListPeople.count == 0 {
+            self.participantButton.setTitle("Game Started", for: .normal)
+            self.participantButton.setTitleColor(.lightGray, for: .normal)
+            self.participantButton.isUserInteractionEnabled = false
+            self.participantButton.backgroundColor = .gray
+            
+            db.collection("rooms").document(self.roomID).updateData(["locked" : true]) { (err) in
+                if let err = err {
+                    createAlert(view: self, title: "Error", message: err.localizedDescription)
+                    return
+                }
+                
+                let me = Person(name: self.roomHost)
+                me.setID(newID: user.uid)
+                me.setHost(isHost: true)
+                me.setWishList(list: wishlist)
+                userGroup.append(me)
+                self.pairFunc()
+                
+            }
+        } else {
+            var text = ""
+            var count = 0
+            for p in wishListPeople {
+                if count < wishListPeople.count-2 {
+                    text += p.getName() + ", "
+                } else if count == wishListPeople.count-2 {
+                    text += p.getName() + " and "
+                } else {
+                    text += p.getName() + " "
+                    text += count > 1 ? "need to add items to their wishlists, please notify them" : "needs to add items to their wishlist, please notify them"
+                }
+                count += 1
+            }
+            createAlert(view: self, title: "Error", message: text)
+        }
+        
+    }
+    
+    func pairFunc() {
+        var restart = false
         let count = userGroup.count
         var remaining = [Int]()
         
         for i in 0..<count {
             remaining.append(i)
         }
-                
-        for i in 0..<count {
-            var num = Int(arc4random_uniform(UInt32(remaining.count)))
-            
-            while (userGroup[num] == userGroup[i]) {
-                num = Int(arc4random_uniform(UInt32(count)))
-            }
-                        
-            var index = 0
-            
-            for j in 0..<remaining.count {
-                if num == j {
-                    index = j
+        for k in 0..<count {
+            let user = userGroup[k]
+            if k != count-1 {
+                var rand: Int = Int(arc4random_uniform(UInt32(count)))
+                while (!remaining.contains(rand) || rand == k) {
+                    rand = Int(arc4random_uniform(UInt32(count)))
                 }
+                user.assign(person: userGroup![rand])
+                remaining.removeAll(where: {$0 == rand})
+                print(remaining)
+            } else {
+                user.assign(person: userGroup![remaining.first!])
             }
-            
-            let secret = remaining[index]
-            let secretP = userGroup[secret]
-            userGroup[i].assign(person: secretP)
-            
-            remaining.remove(at: index)
-
         }
-                        
-//        Print who is paired with who
         
         for person in userGroup {
-            print(person.getName() + " is assigned to " + person.getSecretPerson()!.getName())
+            if person == person.getSecretPerson() {
+                restart = true
+            }
         }
         
+        if restart {
+            self.pairFunc()
+        } else {
+            for person in userGroup {
+                db.collection("rooms").document(self.roomID).updateData(["pairs."+person.getID() : person.getSecretPerson()!.getID()]) { (err) in
+                    if let err = err {
+                        createAlert(view: self, title: "Error", message: err.localizedDescription)
+                        return
+                    }
+                    print(person.getName() + " is assigned to " + person.getSecretPerson()!.getName())
+                }
+            }
+        
+        }
     }
     
     func updateGiftExchange() {
@@ -651,9 +786,19 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         if segue.identifier == "homeToWish" {
             let controller = segue.destination as! WishlistViewController
             controller.roomID = self.roomID
+            controller.isEnabled = self.pairID == ""
+            controller.personName = self.pairName
+            controller.pairID = self.pairID
         } else if segue.identifier == "homeToMain" {
             let controller = (segue.destination as! UINavigationController).viewControllers[0] as! SetupViewController
             controller.fromHome = !errorDismiss
+            if self.editingRoom {
+                controller.editingRoom = self.editingRoom
+                self.editingRoom = false
+                controller.homeID = self.roomID
+                controller.homeDate = self.roomDate
+                controller.homeName = self.roomName
+            }
         }
     }
 
@@ -664,6 +809,7 @@ class PersonCell: UICollectionViewCell {
     @IBOutlet weak var name: UILabel!
     
     var user: Person!
+    var id: String!
 }
 
 extension Date {

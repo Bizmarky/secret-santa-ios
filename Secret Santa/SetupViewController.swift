@@ -23,6 +23,10 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     var fromHome = false
     var code: String!
     var chosenDate: Date!
+    var homeID: String!
+    var homeName: String!
+    var homeDate: Date!
+    var editingRoom: Bool!
     
     @IBOutlet weak var userTypeControl: UISegmentedControl!
     
@@ -139,8 +143,13 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if editingRoom == nil {
+            editingRoom = false
+        }
         
-        chosenDate = Date().ceil(precision: 5*60)        
+        dateView.backgroundColor = .white
+        
+        chosenDate = editingRoom ? homeDate.ceil(precision: 5*60) : Date().ceil(precision: 5*60)
         datePicker.minimumDate = chosenDate
         datePicker.minuteInterval = 5
         datePicker.setDate(chosenDate, animated: false)
@@ -148,6 +157,10 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         calendarView.dataSource = self
         calendarView.select(chosenDate)
         let formatter = DateFormatter()
+        if editingRoom {
+            formatter.dateFormat = "MMM d, yyyy h:mm a"
+            dateField.text = formatter.string(from: chosenDate)
+        }
         formatter.dateFormat = "MMM d, yyyy"
         dateLabel.text = formatter.string(from: chosenDate)
         formatter.dateFormat = "h:mm a"
@@ -164,6 +177,9 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         groupIDField.delegate = self
         dateField.delegate = self
         
+        groupNameField.text = homeName == nil ? groupNameField.text! : homeName
+        groupIDField.text = homeID == nil ? "Invite Code: " : "Invite Code: "+homeID
+                
         setLogoutButton()
         
         submitButton.translatesAutoresizingMaskIntoConstraints = false
@@ -177,19 +193,24 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         self.navigationItem.setHidesBackButton(true, animated: true)
         let titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         UISegmentedControl.appearance().setTitleTextAttributes(titleTextAttributes, for: .selected)
+        
         userTypeAction(self)
-                
-        userGroup = []
-        dataGroup = []
         
-        hostRoomList = []
-        joinRoomList = []
-        roomNameMap = [:]
+        userTypeControl.isHidden = editingRoom
         
-        hideAll()
-        checkRoom()
-                
-        code = ""
+        if !editingRoom {
+            userGroup = []
+            dataGroup = []
+            
+            hostRoomList = []
+            joinRoomList = []
+            roomNameMap = [:]
+            
+            hideAll()
+            checkRoom()
+                    
+            code = ""
+        }
         
         let tap2 = UITapGestureRecognizer()
         tap2.addTarget(self, action: #selector(hideCalendar))
@@ -212,13 +233,15 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        if textField.isEqual(groupNameField) {
-            // max characters 22
-            let codeText = groupNameField.text!
-            code = codeText.replacingOccurrences(of: " ", with: "-").lowercased()
-            self.groupIDField.placeholder = "Invite Code: " + code
-        } else if textField.isEqual(groupIDField) && textField.text != "" {
-            textField.text = textField.text?.replacingOccurrences(of: " ", with: "-").lowercased()
+        if !editingRoom {
+            if textField.isEqual(groupNameField) {
+                // max characters 22
+                let codeText = groupNameField.text!
+                code = codeText.replacingOccurrences(of: " ", with: "-").lowercased()
+                self.groupIDField.placeholder = "Invite Code: " + code
+            } else if textField.isEqual(groupIDField) && textField.text != "" {
+                textField.text = textField.text?.replacingOccurrences(of: " ", with: "-").lowercased()
+            }
         }
     }
     
@@ -252,14 +275,16 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if host {
-            if textField.isEqual(groupNameField) {
-                textField.resignFirstResponder()
-                self.showCalendar()
-                return false
+        if !editingRoom {
+            if host {
+                if textField.isEqual(groupNameField) {
+                    textField.resignFirstResponder()
+                    self.showCalendar()
+                    return false
+                }
+            } else if join {
+                buttonAction(self)
             }
-        } else if join {
-            buttonAction(self)
         }
         return true
     }
@@ -374,10 +399,14 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     }
     
     @IBAction func userTypeAction(_ sender: Any) {
-        if self.userTypeControl.selectedSegmentIndex == 0 {
-            self.setupHost()
-        } else if self.userTypeControl.selectedSegmentIndex == 1 {
-            self.setupJoin()
+        if !editingRoom {
+            if self.userTypeControl.selectedSegmentIndex == 0 {
+                self.setupHost()
+            } else if self.userTypeControl.selectedSegmentIndex == 1 {
+                self.setupJoin()
+            }
+        } else {
+            titleText.text = "Edit Group"
         }
     }
     
@@ -387,6 +416,23 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         if !checkTextFields() {
             activityIndicatorView.isHidden = true
             createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
+            return
+        }
+        
+        if editingRoom {
+            self.view.endEditing(true)
+            if groupNameField.text == "" && dateField.text == "" {
+                activityIndicatorView.isHidden = true
+                createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
+                return
+            }
+            db.collection("rooms").document(homeID).updateData(["name" : self.groupNameField.text!, "date" : self.chosenDate.timeIntervalSince1970]) { (err) in
+                if let err = err {
+                    createAlert(view: self, title: "Error", message: err.localizedDescription)
+                    return
+                }
+                self.dismiss(animated: true, completion: nil)
+            }
             return
         }
         
@@ -547,9 +593,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
             self.groupNameField.alpha = 1
             self.dateField.alpha = 1
             self.view.layoutIfNeeded()
-        }) { (complete) in
-            print("Setup Host Constraints")
-        }
+        })
         self.titleText.text = "Host"
         self.submitButton.setTitle("Create", for: .normal)
         host = true
@@ -570,9 +614,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
             self.groupNameField.alpha = 0
             self.dateField.alpha = 0
             self.view.layoutIfNeeded()
-        }) { (complete) in
-            print("Setup Join Constraints")
-        }
+        })
         self.titleText.text = "Join"
         host = false
         join = true
