@@ -51,6 +51,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         self.pairName = ""
         self.editingRoom = false
         
+        participantButton.alpha = 0
+        
         if self.roomID != nil {
             checkRoom()
             setRoomDataTimer()
@@ -258,7 +260,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     func setupHost() {
         if !locked && userGroup!.count >= 2 {
             participantButton.setTitleColor(.white, for: .normal)
-            participantButton.setTitle("Start Game", for: .normal)
+            participantButton.setTitle("Start / Invite", for: .normal)
             participantButton.isUserInteractionEnabled = true
             participantButton.backgroundColor = .blue
         } else {
@@ -276,18 +278,41 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         }
         participantButton.translatesAutoresizingMaskIntoConstraints = false
         participantButton.layer.cornerRadius = participantButton.frame.height/4
+        
+        UIView.animate(withDuration: 0.2) {
+            self.participantButton.alpha = 1
+        }
     }
     
     
     @IBAction func participantAction(_ sender: Any) {
         if isHost && !locked {
             if userGroup!.count >= 2 {
-                self.pairPeople()
+                
+                let startInviteController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                startInviteController.addAction(UIAlertAction(title: "Share Invite Code", style: .default, handler: { (action) in
+                    self.shareAction()
+                }))
+                startInviteController.addAction(UIAlertAction(title: "Start Game", style: .destructive, handler: { (action) in
+                    self.pairAction()
+                }))
+                startInviteController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                self.present(startInviteController, animated: true, completion: nil)
+                
             } else {
-                let shareController = UIActivityViewController(activityItems: ["Join my secret santa group! Invite Code: "+self.roomID!+"\nApp Link"], applicationActivities: [])
-                self.present(shareController, animated: true, completion: nil)
+                self.shareAction()
             }
         }
+    }
+    
+    func pairAction() {
+        self.activityIndicatorView.isHidden = false
+        self.pairPeople()
+    }
+    
+    func shareAction() {
+        let shareController = UIActivityViewController(activityItems: ["Join my secret santa group! Invite Code: "+self.roomID!+"\nApp Link"], applicationActivities: [])
+        self.present(shareController, animated: true, completion: nil)
     }
     
     func checkRoom() {
@@ -372,7 +397,13 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        print("VIEW DISAPPEARING")
         listener.remove()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print("VIEW APPEARING")
+        setupListener()
     }
     
     func setupListener() {
@@ -390,6 +421,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             
             if self.dataComplete {
                 self.getRoomData()
+                self.checkRoom()
             }
             
 //            let source = snapshot!.metadata.hasPendingWrites ? "Local" : "Server"
@@ -428,6 +460,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                                     } else {
                                         self.wishListButton.isUserInteractionEnabled = false
                                         self.wishListButton.setTitleColor(.gray, for: .normal)
+                                        
                                     }
                                     self.isHost = (data["host"] as! String) == user.uid
 
@@ -482,8 +515,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                                                         person.setWishList(list: personWishlist)
                                                         person.setID(newID: usrUID)
                                                         userGroup.append(person)
-                                                        print(personName+" wishlist: ")
-                                                        print(personWishlist)
+//                                                        print(personName+" wishlist: ")
+//                                                        print(personWishlist)
                                                     }
                                                 }
                                                 
@@ -499,6 +532,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                                                         }
                                                         if self.isHost {
                                                             self.setupHost()
+                                                        } else {
+                                                            UIView.animate(withDuration: 0.2) {
+                                                                self.participantButton.alpha = 1
+                                                            }
                                                         }
                                                         if self.locked {
                                                             self.getPair()
@@ -589,8 +626,25 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                         self.pairID = pairs[key]
                         self.groupCollectionView.reloadData()
                         self.dataComplete = true
+                        break
+                    }
+                }
+                
+                wishlist = (data[self.pairID] as! [String])
+                
+                db.collection("users").document(self.pairID).getDocument { (snapshot, err) in
+                    if let err = err {
+                        createAlert(view: self, title: "Error", message: err.localizedDescription)
                         return
                     }
+                    
+                    if let data = snapshot?.data() {
+                        let userdata = data["userdata"] as! [String:Any]
+                        self.pairName = (userdata["first"] as! String) + " " + (userdata["last"] as! String)
+                    } else {
+                        createAlert(view: self, title: "Error", message: "Couldn't retrieve data")
+                    }
+                    
                 }
                 
             } else {
@@ -611,47 +665,67 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         // Check everyone's wishlist
         var wishListPeople:[Person] = []
         
-        for user in userGroup {
-            if user.getWishList().count == 0 {
-                wishListPeople.append(user)
+        db.collection("rooms").document(self.roomID).getDocument { (snapshot, err) in
+            if let err = err {
+                createAlert(view: self, title: "Error", message: err.localizedDescription)
+                return
             }
-        }
-                
-        if wishListPeople.count == 0 {
-            self.participantButton.setTitle("Game Started", for: .normal)
-            self.participantButton.setTitleColor(.lightGray, for: .normal)
-            self.participantButton.isUserInteractionEnabled = false
-            self.participantButton.backgroundColor = .gray
             
-            db.collection("rooms").document(self.roomID).updateData(["locked" : true]) { (err) in
-                if let err = err {
-                    createAlert(view: self, title: "Error", message: err.localizedDescription)
-                    return
+            if let data = snapshot?.data() {
+                for key in data.keys {
+                    if key != "host" && key != "locked" && key != "name" && key != "date" {
+                        for user in userGroup {
+                            if user.getID() == key {
+                                if user.getWishList().count == 0 {
+                                    wishListPeople.append(user)
+                                }
+                            }
+                        }
+                    }
                 }
                 
-                let me = Person(name: self.roomHost)
-                me.setID(newID: user.uid)
-                me.setHost(isHost: true)
-                me.setWishList(list: wishlist)
-                userGroup.append(me)
-                self.pairFunc()
+                if wishListPeople.count == 0 {
+                   self.participantButton.setTitle("Game Started", for: .normal)
+                   self.participantButton.setTitleColor(.lightGray, for: .normal)
+                   self.participantButton.isUserInteractionEnabled = false
+                   self.participantButton.backgroundColor = .gray
+                   
+                   db.collection("rooms").document(self.roomID).updateData(["locked" : true]) { (err) in
+                       if let err = err {
+                           createAlert(view: self, title: "Error", message: err.localizedDescription)
+                           return
+                       }
+                       
+                       let me = Person(name: self.roomHost)
+                       me.setID(newID: user.uid)
+                       me.setHost(isHost: true)
+                       me.setWishList(list: wishlist)
+                       userGroup.append(me)
+                       self.pairFunc()
+                       
+                   }
+               } else {
+                   var text = ""
+                   var count = 0
+                   for p in wishListPeople {
+                       if count < wishListPeople.count-2 {
+                           text += p.getName() + ", "
+                       } else if count == wishListPeople.count-2 {
+                           text += p.getName() + " and "
+                       } else {
+                           text += p.getName() + " "
+                           text += count > 1 ? "need to add items to their wishlists, please notify them" : "needs to add items to their wishlist, please notify them"
+                       }
+                       count += 1
+                   }
+                   createAlert(view: self, title: "Error", message: text)
+               }
                 
+            } else {
+                createAlert(view: self, title: "Error", message: "Couldn't load data")
+                return
             }
-        } else {
-            var text = ""
-            var count = 0
-            for p in wishListPeople {
-                if count < wishListPeople.count-2 {
-                    text += p.getName() + ", "
-                } else if count == wishListPeople.count-2 {
-                    text += p.getName() + " and "
-                } else {
-                    text += p.getName() + " "
-                    text += count > 1 ? "need to add items to their wishlists, please notify them" : "needs to add items to their wishlist, please notify them"
-                }
-                count += 1
-            }
-            createAlert(view: self, title: "Error", message: text)
+            
         }
         
     }
@@ -689,15 +763,17 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             self.pairFunc()
         } else {
             for person in userGroup {
+
                 db.collection("rooms").document(self.roomID).updateData(["pairs."+person.getID() : person.getSecretPerson()!.getID()]) { (err) in
                     if let err = err {
                         createAlert(view: self, title: "Error", message: err.localizedDescription)
                         return
                     }
+                    
                     print(person.getName() + " is assigned to " + person.getSecretPerson()!.getName())
                 }
             }
-        
+            
         }
     }
     
@@ -788,7 +864,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             controller.roomID = self.roomID
             controller.isEnabled = self.pairID == ""
             controller.personName = self.pairName
-            controller.pairID = self.pairID
         } else if segue.identifier == "homeToMain" {
             let controller = (segue.destination as! UINavigationController).viewControllers[0] as! SetupViewController
             controller.fromHome = !errorDismiss

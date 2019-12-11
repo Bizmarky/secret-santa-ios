@@ -138,7 +138,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     }
     
     func minimumDate(for calendar: FSCalendar) -> Date {
-        return chosenDate
+        return Date().ceil(precision: 5*60)
     }
     
     override func viewDidLoad() {
@@ -148,9 +148,13 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         }
         
         dateView.backgroundColor = .white
-        
+        dateLabel.textColor = .black
+        timeLabel.textColor = .black
+        datePicker.tintColor = .black
+        datePicker.backgroundColor = .clear
+        calendarView.backgroundColor = .white
         chosenDate = editingRoom ? homeDate.ceil(precision: 5*60) : Date().ceil(precision: 5*60)
-        datePicker.minimumDate = chosenDate
+        datePicker.minimumDate = Date().ceil(precision: 5*60)
         datePicker.minuteInterval = 5
         datePicker.setDate(chosenDate, animated: false)
         calendarView.delegate = self
@@ -160,6 +164,8 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         if editingRoom {
             formatter.dateFormat = "MMM d, yyyy h:mm a"
             dateField.text = formatter.string(from: chosenDate)
+            
+            submitButton.setTitle("Save", for: .normal)
         }
         formatter.dateFormat = "MMM d, yyyy"
         dateLabel.text = formatter.string(from: chosenDate)
@@ -178,7 +184,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         dateField.delegate = self
         
         groupNameField.text = homeName == nil ? groupNameField.text! : homeName
-        groupIDField.text = homeID == nil ? "Invite Code: " : "Invite Code: "+homeID
+        groupIDField.placeholder = homeID == nil ? "Invite Code: " : "Invite Code: "+homeID
                 
         setLogoutButton()
         
@@ -285,6 +291,8 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
             } else if join {
                 buttonAction(self)
             }
+        } else {
+            self.view.endEditing(true)
         }
         return true
     }
@@ -413,12 +421,6 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     @IBAction func buttonAction(_ sender: Any) {
         activityIndicatorView.isHidden = false
         
-        if !checkTextFields() {
-            activityIndicatorView.isHidden = true
-            createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
-            return
-        }
-        
         if editingRoom {
             self.view.endEditing(true)
             if groupNameField.text == "" && dateField.text == "" {
@@ -433,6 +435,12 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
                 }
                 self.dismiss(animated: true, completion: nil)
             }
+            return
+        }
+        
+        if !checkTextFields() {
+            activityIndicatorView.isHidden = true
+            createAlert(view: self, title: "Error", message: "Text fields cannot be blank")
             return
         }
         

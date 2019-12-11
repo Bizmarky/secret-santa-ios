@@ -15,7 +15,6 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
     var roomID: String!
     var isEnabled: Bool!
     var personName: String!
-    var pairID: String!
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return wishlist.count
@@ -50,22 +49,11 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
             
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        let addItemButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))
+        addItemButton.isEnabled = isEnabled
         
-        if pairID != nil {
-            db.collection("rooms").document(roomID).getDocument { (snapshot, err) in
-                if let err = err {
-                    createAlert(view: self, title: "Error", message: err.localizedDescription)
-                    return
-                }
-                if let data = snapshot?.data() {
-                    wishlist = (data[self.pairID] as! [String])
-                } else {
-                    createAlert(view: self, title: "Error", message: "Couldn't load data")
-                    return
-                }
-            }
-        }
-        self.navigationItem.setLeftBarButton(UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem)), animated: true)
+        self.navigationItem.setLeftBarButton(addItemButton, animated: true)
         self.navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(saveAndExit)), animated: true)
         
         tableView.register(WishlistTableViewCell.self, forCellReuseIdentifier: "cell")
@@ -77,7 +65,7 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
         
         tableView.isUserInteractionEnabled = isEnabled
         
-        self.navigationItem.title = isEnabled ? self.personName : "Wishlist"
+        self.navigationItem.title = isEnabled ? "Wishlist" : self.personName+"\'s Wishlist"
     }
     
     @objc func addItem() {
@@ -139,12 +127,16 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
     @objc func saveAndExit(barButton: UIBarButtonItem) {
         // Save to firebase and go back
         self.view.endEditing(true)
-        let loading = UIActivityIndicatorView()
-        loading.startAnimating()
-        barButton.customView = loading
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0.5) {
-            self.saveWishlist()
-            self.updateFirestore()
+        if isEnabled {
+            let loading = UIActivityIndicatorView()
+            loading.startAnimating()
+            barButton.customView = loading
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0.5) {
+                self.saveWishlist()
+                self.updateFirestore()
+                self.navigationController?.popViewController(animated: true)
+            }
+        } else {
             self.navigationController?.popViewController(animated: true)
         }
     }
