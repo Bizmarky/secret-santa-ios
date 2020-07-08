@@ -147,12 +147,15 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
             editingRoom = false
         }
         
-        dateView.backgroundColor = .white
-        dateLabel.textColor = .black
-        timeLabel.textColor = .black
-        datePicker.tintColor = .black
+        dateView.backgroundColor = .systemBackground
+        dateView.layer.borderColor = UIColor.label.cgColor
+        dateView.layer.borderWidth = 1
+        dateLabel.textColor = .label
+        timeLabel.textColor = .label
+        datePicker.tintColor = .label
         datePicker.backgroundColor = .clear
-        calendarView.backgroundColor = .white
+        calendarView.backgroundColor = .systemBackground
+        calendarView.appearance.titleDefaultColor = .label
         chosenDate = editingRoom ? homeDate.ceil(precision: 5*60) : Date().ceil(precision: 5*60)
         datePicker.minimumDate = Date().ceil(precision: 5*60)
         datePicker.minuteInterval = 5
@@ -272,6 +275,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     
     @objc func hideCalendar() {
         self.dateViewConstraintTop.constant = 620
+        self.updateDate()
         UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
             self.overlay.alpha = 0
@@ -326,6 +330,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
     }
     
     func checkRoom() {
+        var roomError = false
         db.collection("users").document(user.uid).getDocument { (document, err) in
             if let err = err {
                 print(err)
@@ -356,9 +361,12 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
                             if let err = err {
                                 print(err)
                             } else {
-                                let data = doc?.data()!
-                                let name = data!["name"] as! String
-                                roomNameMap[room] = name
+                                if let data = doc?.data() {
+                                    let name = data["name"] as! String
+                                    roomNameMap[room] = name
+                                } else {
+                                    roomError = true
+                                }
                             }
                         }
                     }
@@ -370,15 +378,18 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
                                 if let err = err {
                                     print(err)
                                 } else {
-                                    let data = doc?.data()!
-                                    let name = data!["name"] as! String
-                                    roomNameMap[room] = name
+                                    if let data = doc?.data() {
+                                        let name = data["name"] as! String
+                                        roomNameMap[room] = name
+                                    } else {
+                                        roomError = true
+                                    }
                                 }
                             }
                         }
                     }
                     if !self.fromHome {
-                        self.prepareRoom()
+                        self.prepareRoom(err: roomError)
                     } else {
                         self.showAll()
                         self.activityIndicatorView.isHidden = true
@@ -388,7 +399,7 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
         }
     }
     
-    func prepareRoom() {
+    func prepareRoom(err: Bool) {
         self.roomID = ""
         
         if defaults.object(forKey: "currentRoom") != nil {
@@ -403,7 +414,18 @@ class SetupViewController: UIViewController, UITextFieldDelegate, FSCalendarDele
             }
         }
         
-        self.performSegue(withIdentifier: "mainToHome", sender: self)
+        // Check if room exists
+        let roomRef = db.collection("rooms").document(self.roomID)
+        roomRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                // Room exists
+                self.performSegue(withIdentifier: "mainToHome", sender: self)
+            } else {
+                // Room doesn't exist
+                self.showAll()
+                self.activityIndicatorView.isHidden = true
+            }
+        }
     }
     
     @IBAction func userTypeAction(_ sender: Any) {

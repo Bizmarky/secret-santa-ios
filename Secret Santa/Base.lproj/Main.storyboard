@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="UAN-61-X8R">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="UAN-61-X8R">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -28,7 +28,7 @@
         <!--Sign Up View Controller-->
         <scene sceneID="5LN-cU-UBs">
             <objects>
-                <viewController title="Sign Up View Controller" id="YBi-NE-y10" customClass="SignUpViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Sign Up View Controller" id="YBi-NE-y10" customClass="SignUpViewController" customModule="Eleven_Eleven" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nUI-JU-sdD">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -87,7 +87,7 @@
         <!--Second Sign Up View Controller-->
         <scene sceneID="ZD0-fA-VR5">
             <objects>
-                <viewController title="Second Sign Up View Controller" id="hw4-OW-FES" customClass="SecondSignUpViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Second Sign Up View Controller" id="hw4-OW-FES" customClass="SecondSignUpViewController" customModule="Eleven_Eleven" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zIG-QV-1el">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -167,12 +167,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gcA-fx-G5C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="187" y="-2858"/>
+            <point key="canvasLocation" x="187" y="-2922"/>
         </scene>
         <!--Initial View Controller-->
         <scene sceneID="gUO-Yz-Vjn">
             <objects>
-                <viewController title="Initial View Controller" id="8ud-19-LP4" customClass="InitialViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Initial View Controller" id="8ud-19-LP4" customClass="InitialViewController" customModule="Eleven_Eleven" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YAs-fb-YFi">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -200,7 +200,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7rP-Jm-ckh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="187" y="-2221"/>
+            <point key="canvasLocation" x="187" y="-2218"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="WuG-fK-3KU">
@@ -222,7 +222,7 @@
         <!--Setup View Controller-->
         <scene sceneID="OrM-yA-bvg">
             <objects>
-                <viewController title="Setup View Controller" id="8Vp-RC-4sT" customClass="SetupViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Setup View Controller" id="8Vp-RC-4sT" customClass="SetupViewController" customModule="Eleven_Eleven" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UTU-oI-YZ1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -426,7 +426,7 @@
         <!--Main View Controller-->
         <scene sceneID="Mrc-Qw-CnN">
             <objects>
-                <viewController title="Main View Controller" id="ucW-8A-26P" customClass="ViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Main View Controller" id="ucW-8A-26P" customClass="ViewController" customModule="Eleven_Eleven" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="uf9-nH-EEz">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -441,7 +441,7 @@
                                     <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="personCell" id="ndc-T4-0kp" customClass="PersonCell" customModule="Secret_Santa" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="personCell" id="ndc-T4-0kp" customClass="PersonCell" customModule="Eleven_Eleven" customModuleProvider="target">
                                         <rect key="frame" x="10" y="10" width="105" height="135"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="sXq-ul-H1X">
@@ -500,17 +500,11 @@
                                     <action selector="participantAction:" destination="ucW-8A-26P" eventType="touchUpInside" id="DfW-r1-eIH"/>
                                 </connections>
                             </button>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="FrI-4u-mVW">
-                                <rect key="frame" x="0.0" y="44" width="414" height="692"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="uYJ-Om-3sm" firstAttribute="leading" secondItem="pgM-6O-Kh1" secondAttribute="leading" constant="16" id="3jg-lP-6EZ"/>
                             <constraint firstItem="uYJ-Om-3sm" firstAttribute="top" secondItem="ht7-KU-TA9" secondAttribute="bottom" constant="12" id="AJI-ep-y6h"/>
-                            <constraint firstItem="FrI-4u-mVW" firstAttribute="top" secondItem="pgM-6O-Kh1" secondAttribute="top" id="BPU-Qg-I9z"/>
                             <constraint firstItem="Vfd-W4-PFL" firstAttribute="leading" secondItem="pgM-6O-Kh1" secondAttribute="leading" constant="112" id="HEf-oe-gV8"/>
                             <constraint firstItem="CUv-rf-Rqi" firstAttribute="top" secondItem="Vfd-W4-PFL" secondAttribute="bottom" constant="32" id="ITK-bC-QFj"/>
                             <constraint firstItem="CUv-rf-Rqi" firstAttribute="leading" secondItem="pgM-6O-Kh1" secondAttribute="leading" id="MI3-2q-w9D"/>
@@ -521,20 +515,19 @@
                             <constraint firstAttribute="trailing" secondItem="CUv-rf-Rqi" secondAttribute="trailing" id="fOx-z2-gWh"/>
                             <constraint firstItem="CUv-rf-Rqi" firstAttribute="top" secondItem="pgM-6O-Kh1" secondAttribute="top" constant="192" id="nxX-cI-StG"/>
                             <constraint firstItem="ht7-KU-TA9" firstAttribute="leading" secondItem="pgM-6O-Kh1" secondAttribute="leading" constant="8" id="nxu-yO-5ZH"/>
-                            <constraint firstAttribute="trailing" secondItem="FrI-4u-mVW" secondAttribute="trailing" id="oRC-QE-yFw"/>
                             <constraint firstItem="ht7-KU-TA9" firstAttribute="top" secondItem="pgM-6O-Kh1" secondAttribute="top" constant="16" id="q98-or-1CN"/>
-                            <constraint firstItem="FrI-4u-mVW" firstAttribute="leading" secondItem="uf9-nH-EEz" secondAttribute="leading" id="tsQ-mp-XkX"/>
-                            <constraint firstAttribute="bottom" secondItem="FrI-4u-mVW" secondAttribute="bottom" id="uts-3J-ZGS"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="pgM-6O-Kh1"/>
                     </view>
                     <navigationItem key="navigationItem" id="Ziq-li-pfK">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="VH2-P7-gVd">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NLH-VZ-5ht">
+                            <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NLH-VZ-5ht">
                                 <rect key="frame" x="20" y="5.6666666666666679" width="92" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                <state key="normal" title="Menu"/>
+                                <state key="normal" title="Menu">
+                                    <color key="titleColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="menuAction:" destination="ucW-8A-26P" eventType="touchUpInside" id="EbJ-56-Vew"/>
                                 </connections>
@@ -555,10 +548,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicatorView" destination="FrI-4u-mVW" id="Oca-0w-IEu"/>
                         <outlet property="giftExchangeLabel" destination="ht7-KU-TA9" id="hmV-aR-dkt"/>
                         <outlet property="giftSublabel" destination="uYJ-Om-3sm" id="1Y2-td-0XN"/>
                         <outlet property="groupCollectionView" destination="CUv-rf-Rqi" id="n6O-do-9Ef"/>
+                        <outlet property="menuButton" destination="NLH-VZ-5ht" id="8QM-0n-UoA"/>
                         <outlet property="participantButton" destination="Vfd-W4-PFL" id="aP5-Fh-jMK"/>
                         <outlet property="wishListButton" destination="qtC-Fb-OP8" id="Mj1-wP-JYW"/>
                         <segue destination="dEQ-rU-DHc" kind="presentation" identifier="logoutSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="45O-xH-XsU"/>
@@ -591,7 +584,7 @@
         <!--Room Display View Controller-->
         <scene sceneID="WOB-xj-IEQ">
             <objects>
-                <viewController id="ixc-kG-7kN" customClass="RoomDisplayViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ixc-kG-7kN" customClass="RoomDisplayViewController" customModule="Eleven_Eleven" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hTD-7w-f5X">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -665,7 +658,7 @@
         <!--Wishlist View Controller-->
         <scene sceneID="207-n4-oSq">
             <objects>
-                <tableViewController title="Wishlist View Controller" id="yXl-qr-OVs" customClass="WishlistViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Wishlist View Controller" id="yXl-qr-OVs" customClass="WishlistViewController" customModule="Eleven_Eleven" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="dJa-FM-R6M">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -694,7 +687,7 @@
         <!--Settings-->
         <scene sceneID="lAK-br-oS9">
             <objects>
-                <tableViewController id="iPD-RZ-ltA" customClass="SettingsViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="iPD-RZ-ltA" customClass="SettingsViewController" customModule="Eleven_Eleven" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="7lr-9N-IIR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -865,7 +858,7 @@
         <!--Title View Controller-->
         <scene sceneID="eTV-bd-o3w">
             <objects>
-                <viewController title="Title View Controller" id="h0c-Yd-hBp" customClass="TitleViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Title View Controller" id="h0c-Yd-hBp" customClass="TitleViewController" customModule="Eleven_Eleven" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mmK-5e-9RB">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -927,7 +920,7 @@
         <!--Login View Controller-->
         <scene sceneID="d4D-cW-U0I">
             <objects>
-                <viewController title="Login View Controller" id="7eX-26-67L" customClass="LoginViewController" customModule="Secret_Santa" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Login View Controller" id="7eX-26-67L" customClass="LoginViewController" customModule="Eleven_Eleven" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="udq-Av-n6R">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1008,6 +1001,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="Zsg-NC-4nj"/>
         <segue reference="Q0Y-d1-PDS"/>
         <segue reference="U81-SO-RvW"/>
     </inferredMetricsTieBreakers>

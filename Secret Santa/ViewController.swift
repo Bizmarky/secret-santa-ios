@@ -18,6 +18,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     @IBOutlet weak var wishListButton: UIButton!
     
+    @IBOutlet weak var menuButton: UIButton!
+    
     var isHost: Bool!
     var locked: Bool!
     var roomID: String!
@@ -37,8 +39,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     var pairID: String!
     var pairName: String!
     var editingRoom: Bool!
+    var snowTimer: Timer!
+    var loadingSnowTimer: Timer!
     
-    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    var activityIndicatorView: UIView!
     
     @IBOutlet weak var giftExchangeLabel: UILabel!
     @IBOutlet weak var giftSublabel: UILabel!
@@ -46,7 +50,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-                
+                        
         self.pairID = ""
         self.pairName = ""
         self.editingRoom = false
@@ -57,7 +61,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             checkRoom()
             setRoomDataTimer()
         }
-        
+                
         participantButton.isHidden = true
         giftExchangeLabel.text = ""
         giftSublabel.text = ""
@@ -79,6 +83,132 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         tapView.addGestureRecognizer(tap)
         
         viewAppeared = true
+        
+        setupLoadingIndicator()
+        
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) {
+//            self.addSnowTimer()
+//        }
+    }
+    
+    @objc func refreshFunc() {
+        self.setRoomDataTimer()
+    }
+
+    func setupLoadingIndicator() {
+//        let height: CGFloat = 130
+//        let width: CGFloat = 130
+        let height: CGFloat = self.view.frame.height
+        let width: CGFloat = self.view.frame.width
+        let x = self.view.center.x - width/2
+        let y = self.view.center.y - height/2
+                
+        activityIndicatorView = UIView(frame: CGRect(x: x, y: y, width: width, height: height))
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+//        activityIndicatorView.layer.cornerRadius = 17
+        activityIndicatorView.alpha = 0.9
+        activityIndicatorView.backgroundColor = .darkGray
+        
+        let santaScale = 0.15
+        let santaWidth: CGFloat = CGFloat(934*santaScale)
+        let santaHeight: CGFloat = CGFloat(641*santaScale)
+        
+        let santaView = UIImageView(frame: CGRect(x: activityIndicatorView.center.x - (santaWidth/2), y: activityIndicatorView.center.y - (santaWidth/2), width: santaWidth, height: santaHeight))
+        
+        var imageArray: [UIImage] = []
+        
+        for i in 1...13 {
+            let image = UIImage(named: "Walk (\(i)).png")!
+            imageArray.append(image)
+        }
+        
+        santaView.image = UIImage.animatedImage(with: imageArray, duration: 0)
+        
+        let loadingLabel = UILabel(frame: CGRect(x: santaView.frame.minX+26, y: santaView.frame.maxY-20, width: 100, height: 40))
+        loadingLabel.text = "Loading"
+        loadingLabel.font = UIFont(name: "Chalkboard SE", size: 20)
+        loadingLabel.textColor = .white
+        
+        let snowScreen = UIView(frame: CGRect(x: santaView.frame.minX, y: santaView.frame.maxY + 8, width: santaView.frame.width, height: santaView.frame.height + 8))
+        snowScreen.backgroundColor = .clear
+        snowScreen.translatesAutoresizingMaskIntoConstraints = false
+        snowScreen.layer.cornerRadius = 12
+
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
+            self.addLoadingSnow(thisView: snowScreen)
+        }
+        
+        activityIndicatorView.addSubview(snowScreen)
+        activityIndicatorView.addSubview(santaView)
+        activityIndicatorView.addSubview(loadingLabel)
+        view.addSubview(activityIndicatorView)
+    }
+    
+    func addLoadingSnow(thisView: UIView) {
+        loadingSnowTimer = Timer.scheduledTimer(withTimeInterval: self.timerInterval, repeats: true, block: { (timer) in
+            self.loadingSnow(thisView: thisView)
+        })
+    }
+        
+    func loadingSnow(thisView: UIView) {
+        let snowflake = UIImageView(image: UIImage(named: "snow.png"))
+    //        let x = CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width-2)))
+    //        let snowflake = UIView(frame: CGRect(x: x, y: -3, width: 6, height: 6))
+//        snowflake.backgroundColor = arc4random_uniform(2) == 0 ? .red : .blue
+        snowflake.backgroundColor = .white
+        snowflake.tag = -1
+        snowflake.isUserInteractionEnabled = false
+        thisView.addSubview(snowflake)
+        
+        snowflake.translatesAutoresizingMaskIntoConstraints = false
+        
+        let topConstraint = NSLayoutConstraint(item: snowflake, attribute: .top, relatedBy: .equal, toItem: thisView, attribute: .top, multiplier: 1, constant: CGFloat(arc4random_uniform(48)))
+        let widthConstraint = NSLayoutConstraint(item: snowflake, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 6)
+        let heightConstraint = NSLayoutConstraint(item: snowflake, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 6)
+        let xConstraint = NSLayoutConstraint(item: snowflake, attribute: .leading, relatedBy: .equal, toItem: thisView, attribute: .leading, multiplier: 1, constant: CGFloat(arc4random_uniform(48)))
+        
+        thisView.addConstraints([topConstraint, widthConstraint, heightConstraint, xConstraint])
+        
+        topConstraint.constant = thisView.frame.size.height+2
+        
+        UIView.animate(withDuration: 5, animations: {
+            thisView.layoutIfNeeded()
+        }) { (complete) in
+            snowflake.removeFromSuperview()
+        }
+    }
+    
+    func addSnowTimer() {
+        snowTimer = Timer.scheduledTimer(withTimeInterval: self.timerInterval, repeats: true, block: { (timer) in
+            self.addSnow()
+        })
+    }
+    
+    func addSnow() {
+        let snowflake = UIImageView(image: UIImage(named: "snow.png"))
+//        let x = CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width-2)))
+//        let snowflake = UIView(frame: CGRect(x: x, y: -3, width: 6, height: 6))
+        snowflake.backgroundColor = arc4random_uniform(2) == 0 ? .red : .blue
+        snowflake.tag = -1
+        snowflake.isUserInteractionEnabled = false
+        view.addSubview(snowflake)
+        
+        snowflake.translatesAutoresizingMaskIntoConstraints = false
+        
+        let topConstraint = NSLayoutConstraint(item: snowflake, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: -3)
+        let widthConstraint = NSLayoutConstraint(item: snowflake, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 6)
+        let heightConstraint = NSLayoutConstraint(item: snowflake, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 6)
+        let xConstraint = NSLayoutConstraint(item: snowflake, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: snowflake.frame.midX)
+        
+        view.addConstraints([topConstraint, widthConstraint, heightConstraint, xConstraint])
+        
+        topConstraint.constant = self.view.frame.size.height+2
+        
+        UIView.animate(withDuration: 5, animations: {
+            self.view.layoutIfNeeded()
+        }) { (complete) in
+            snowflake.removeFromSuperview()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -215,7 +345,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     @IBAction func menuAction(_ sender: Any) {
         
         let menuAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-
+        
         if isHost {
             let a = UIAlertAction(title: "Edit Group", style: .default, handler: { (action) in
                 self.editRoom()
@@ -311,7 +441,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func shareAction() {
-        let shareController = UIActivityViewController(activityItems: ["Join my secret santa group! Invite Code: "+self.roomID!+"\nApp Link"], applicationActivities: [])
+        let shareController = UIActivityViewController(activityItems: ["Join my secret santa group!\nInvite Code: "+self.roomID!+"\nApp Link"], applicationActivities: [])
         self.present(shareController, animated: true, completion: nil)
     }
     
@@ -335,9 +465,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                         if let err = err {
                             print(err)
                         } else {
-                            let data = doc?.data()!
-                            let name = data!["name"] as! String
-                            roomNameMap[room] = name
+                            if let data = doc?.data() {
+                                let name = data["name"] as! String
+                                roomNameMap[room] = name
+                            }
                         }
                     }
                 }
@@ -349,9 +480,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                             if let err = err {
                                 print(err)
                             } else {
-                                let data = doc?.data()!
-                                let name = data!["name"] as! String
-                                roomNameMap[room] = name
+                                if let data = doc?.data() {
+                                    let name = data["name"] as! String
+                                    roomNameMap[room] = name
+                                }
                             }
                         }
                     }
@@ -378,7 +510,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action) in
                 
                 self.activityIndicatorView.isHidden = false
-
+                
                 let firebaseAuth = Auth.auth()
                 
                 do {
@@ -462,8 +594,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                                         self.wishListButton.setTitleColor(.gray, for: .normal)
                                         
                                     }
+                                    
                                     self.isHost = (data["host"] as! String) == user.uid
-
+                                    self.menuButton.isUserInteractionEnabled = true
+                                    self.menuButton.setTitleColor(.systemBlue, for: .normal)
+                                    
                                     for key in data.keys {
                                         if key != "locked" && key != "pairs" {
                                             let usrUID = key
@@ -570,7 +705,19 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                                     self.activityTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (timer) in
                                         if self.activityIndicatorView != nil {
                                             self.activityTimer.invalidate()
-                                            self.activityIndicatorView.isHidden = true
+                                           
+                                            UIView.animate(withDuration: 0.5, animations: {
+                                                self.activityIndicatorView.alpha = 0
+                                                for views in self.activityIndicatorView.subviews {
+                                                    views.alpha = 0
+                                                }
+                                            }) { (complete) in
+                                                self.activityIndicatorView.isHidden = true
+                                                self.activityIndicatorView.alpha = 1
+                                                for views in self.activityIndicatorView.subviews {
+                                                    views.alpha = 1
+                                                }
+                                            }
                                         }
                                     })
                                     defaults.set(self.roomID, forKey: "currentRoom")
@@ -893,4 +1040,39 @@ extension Date {
         return lhs.timeIntervalSinceReferenceDate - rhs.timeIntervalSinceReferenceDate
     }
 
+}
+
+extension UIView {
+    
+    func addSnow() {
+        
+        let _ = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { (timer) in
+//            let snowflake = UIImageView(image: UIImage(named: "snow.png"))
+            let x = CGFloat(arc4random_uniform(UInt32(self.frame.size.width-2)))
+            let snowflake = UIView(frame: CGRect(x: x, y: -3, width: 6, height: 6))
+            snowflake.backgroundColor = arc4random_uniform(2) == 0 ? .red : .blue
+            snowflake.tag = -1
+            snowflake.isUserInteractionEnabled = false
+            self.addSubview(snowflake)
+            
+            snowflake.translatesAutoresizingMaskIntoConstraints = false
+            
+            let topConstraint = NSLayoutConstraint(item: snowflake, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: -3)
+            let widthConstraint = NSLayoutConstraint(item: snowflake, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 6)
+            let heightConstraint = NSLayoutConstraint(item: snowflake, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 6)
+            let xConstraint = NSLayoutConstraint(item: snowflake, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: snowflake.frame.midX)
+            
+            self.addConstraints([topConstraint, widthConstraint, heightConstraint, xConstraint])
+            
+            topConstraint.constant = self.frame.size.height+2
+            
+            UIView.animate(withDuration: 5, animations: {
+                self.layoutIfNeeded()
+            }) { (complete) in
+                snowflake.removeFromSuperview()
+            }
+        }
+        
+    }
+    
 }

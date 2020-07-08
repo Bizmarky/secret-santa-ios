@@ -45,6 +45,9 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.row < wishlist.count {
+            (tableView.cellForRow(at: indexPath) as! WishlistTableViewCell).textField.becomeFirstResponder()
+        }
     }
             
     override func viewDidLoad() {
@@ -69,6 +72,7 @@ class WishlistViewController: UITableViewController, UITextFieldDelegate {
     }
     
     @objc func addItem() {
+        print("adding item")
         wishlist.append("")
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
